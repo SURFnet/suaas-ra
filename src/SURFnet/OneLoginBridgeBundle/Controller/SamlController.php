@@ -22,7 +22,9 @@ class SamlController extends Controller
      */
     public function loginAction()
     {
-        return $this->render('SURFnetOneLoginBridgeBundle:Default:index.html.twig', array('name' => 'Daan'));
+        /** @var SURFnet\OneLoginBridgeBundle\Service\Configuration $conf */
+        $settings = $this->get('surfnet.onelogin_bridge.settings');
+        return $this->render('SURFnetOneLoginBridgeBundle:Default:index.html.twig', array('name' => $settings->spIssuer));
     }
 
     /**

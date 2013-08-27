@@ -1,7 +1,18 @@
 parameters:
-#    sur_fnet_one_login_bridge.example.class: SURFnet\OneLoginBridgeBundle\Example
+    surfnet.onelogin_bridge.configuration.class:    SURFnet\OneLoginBridgeBundle\Service\Configuration
+    surfnet.onelogin_bridge.settings.class:         SURFnet\OneLoginBridgeBundle\Service\Settings
 
 services:
-#    sur_fnet_one_login_bridge.example:
-#        class: %sur_fnet_one_login_bridge.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    surfnet.onelogin_bridge.configuration:
+        class: %surfnet.onelogin_bridge.configuration.class%
+        arguments:
+            - %surfnet.onelogin_bridge.saml.target_url%
+            - %surfnet.onelogin_bridge.saml.consumer_url%
+            - %surfnet.onelogin_bridge.saml.issuer_name%
+            - %surfnet.onelogin_bridge.saml.name_identifier_format%
+            - %surfnet.onelogin_bridge.saml.certificate%
+
+    surfnet.onelogin_bridge.settings:
+        class: %surfnet.onelogin_bridge.settings.class%
+        arguments: [@surfnet.onelogin_bridge.configuration]
+
