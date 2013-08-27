@@ -21,7 +21,7 @@
         "sensio/framework-extra-bundle": "2.3.*",
         "sensio/generator-bundle": "2.3.*",
         "incenteev/composer-parameter-handler": "~2.0",
-        "twbs/bootstrap": "dev-master",
+        "twbs/bootstrap": "2.3.2",
         "mopa/bootstrap-bundle": "dev-master",
         "onelogin/php-saml": "dev-master"
     },
