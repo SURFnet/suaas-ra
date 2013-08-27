@@ -18,11 +18,36 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sur_fnet_one_login_bridge');
+        $rootNode = $treeBuilder->root('surfnet_onelogin_bridge');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->arrayNode('saml_settings')
+                    ->info('check out https://onelogin.zendesk.com/entries/268420-saml-toolkit-for-php')
+                    ->children()
+                        ->scalarNode('target_url')
+                            ->info('The IdP url to use to authenticate against')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode('consumer_url')
+                            ->isRequired()
+                        ->end()
+                        ->scalarNode('issuer_name')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode('name_identifier_format')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode('certificate')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }
