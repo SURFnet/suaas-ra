@@ -63,3 +63,12 @@ swiftmailer:
     username:  %mailer_user%
     password:  %mailer_password%
     spool:     { type: memory }
+
+sur_fnet_one_login_bridge:
+    saml_settings:
+        target_url:             %saml_target_url%
+        consumer_url:           %saml_consumer_url%
+        issuer_name:            %saml_issuer_name%
+        name_identifier_format: %saml_name_identifier_format%
+        certificate:            %saml_certificate%
+
