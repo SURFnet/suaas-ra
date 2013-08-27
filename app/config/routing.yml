@@ -6,3 +6,11 @@ surfnet_suaas_ra:
     resource: "@SURFnetSuAASRABundle/Resources/config/routing.yml"
     prefix:   /management
 
+#surfnet_suaas_ra:
+#    resource: "@SURFnetOneLoginBridgeBundle/Resources/config/routing.yml"
+#    prefix:   /saml
+
+surfnet_onelogin_saml:
+    resource: "@SURFnetOneLoginBridgeBundle/Controller/"
+    type:     annotation
+    prefix:   /
