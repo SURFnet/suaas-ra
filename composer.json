@@ -60,6 +60,9 @@
                 "dist": {
                     "url":"https://github.com/onelogin/php-saml/zipball/master",
                     "type":"zip"
+                },
+                "autoload": {
+                    "psr-0": {"OneLogin_": "src/"}
                 }
             }
         }

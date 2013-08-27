@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "f4bcfed4ec63027cecc4bf51ab51635c",
+    "hash": "03b249ccbf914102313b89eec947aada",
     "packages": [
         {
             "name": "doctrine/common",
@@ -742,6 +742,11 @@
                 "shasum": null
             },
             "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "OneLogin_": "src/"
+                }
+            },
             "time": "2012-10-25 18:29:18"
         },
         {
