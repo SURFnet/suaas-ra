@@ -1,0 +1,7 @@
+parameters:
+#    sur_fnet_su_aasra.example.class: SURFnet\SuAAS\RABundle\Example
+
+services:
+#    sur_fnet_su_aasra.example:
+#        class: %sur_fnet_su_aasra.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
