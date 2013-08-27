@@ -1,0 +1,7 @@
+parameters:
+#    sur_fnet_su_aas_self_service.example.class: SURFnet\SuAAS\SelfServiceBundle\Example
+
+services:
+#    sur_fnet_su_aas_self_service.example:
+#        class: %sur_fnet_su_aas_self_service.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

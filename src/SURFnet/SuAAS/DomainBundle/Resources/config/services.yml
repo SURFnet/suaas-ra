@@ -1,0 +1,7 @@
+parameters:
+#    sur_fnet_su_aas_domain.example.class: SURFnet\SuAAS\DomainBundle\Example
+
+services:
+#    sur_fnet_su_aas_domain.example:
+#        class: %sur_fnet_su_aas_domain.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
