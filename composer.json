@@ -22,7 +22,8 @@
         "sensio/generator-bundle": "2.3.*",
         "incenteev/composer-parameter-handler": "~2.0",
         "twbs/bootstrap": "dev-master",
-        "mopa/bootstrap-bundle": "dev-master"
+        "mopa/bootstrap-bundle": "dev-master",
+        "onelogin/php-saml": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
@@ -45,6 +46,24 @@
     "config": {
         "bin-dir": "bin"
     },
+    "repositories": [
+        {
+            "type":"package",
+            "package": {
+                "version":"dev-master",
+                "name":"onelogin/php-saml",
+                "source": {
+                    "url":"https://github.com/onelogin/php-saml.git",
+                    "type":"git",
+                    "reference":"master"
+                },
+                "dist": {
+                    "url":"https://github.com/onelogin/php-saml/zipball/master",
+                    "type":"zip"
+                }
+            }
+        }
+    ],
     "minimum-stability": "stable",
     "extra": {
         "symfony-app-dir": "app",

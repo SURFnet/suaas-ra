@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "bdfd23b46077753c2e177bca2d9260da",
+    "hash": "55cee94c21c41ebdf76bd04b12425d78",
     "packages": [
         {
             "name": "doctrine/common",
@@ -728,6 +728,23 @@
             "time": "2013-03-04 11:32:33"
         },
         {
+            "name": "onelogin/php-saml",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/onelogin/php-saml.git",
+                "reference": "master"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/onelogin/php-saml/zipball/master",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "library",
+            "time": "2012-10-25 18:29:18"
+        },
+        {
             "name": "psr/log",
             "version": "1.0.0",
             "source": {
@@ -1432,7 +1449,8 @@
         "doctrine/migrations": 20,
         "doctrine/doctrine-migrations-bundle": 20,
         "twbs/bootstrap": 20,
-        "mopa/bootstrap-bundle": 20
+        "mopa/bootstrap-bundle": 20,
+        "onelogin/php-saml": 20
     },
     "platform": {
         "php": ">=5.3.3"
