@@ -13,3 +13,9 @@ parameters:
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    saml_target_url:
+    saml_consumer_url:
+    saml_issuer_name:
+    saml_name_identifier_format:
+    saml_certificate:

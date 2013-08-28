@@ -1,3 +1,0 @@
-sur_fnet_one_login_bridge_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: SURFnetOneLoginBridgeBundle:Default:index }
