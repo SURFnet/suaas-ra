@@ -3,6 +3,7 @@
 namespace SURFnet\OneLoginBridgeBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -18,32 +19,40 @@ class SamlController extends Controller
     /**
      * @Route("/login")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function loginAction()
     {
-        /** @var SURFnet\OneLoginBridgeBundle\Service\Configuration $conf */
-        $settings = $this->get('surfnet.onelogin_bridge.settings');
-        return $this->render('SURFnetOneLoginBridgeBundle:Default:index.html.twig', array('name' => $settings->spIssuer));
+        /** @var \OneLogin_Saml_AuthRequest $samlRequest */
+        $samlRequest = $this->get('surfnet.saml.request');
+        return $this->redirect($samlRequest->getRedirectUrl());
     }
 
     /**
      * @Route("/metadata")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function metadataAction()
     {
-        return $this->render('SURFnetOneLoginBridgeBundle:Default:index.html.twig', array('name' => 'Daan'));
+        /** @var \OneLogin_Saml_Metadata $metadata */
+        $metadata = $this->get('surfnet.saml.metadata');
+        return new Response($metadata->getXml());
     }
 
     /**
-     * @Route("/consumer")
+     * @Route("/consume", name="saml_consume")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function consumerAction()
     {
-        return $this->render('SURFnetOneLoginBridgeBundle:Default:index.html.twig', array('name' => 'Daan'));
+        /** @var \SURFnet\OneLoginBridgeBundle\Service\ResponseAdapter $samlResponse */
+        $samlResponse = $this->get('surfnet.saml.response');
+
+        return $this->render(
+            'SURFnetOneLoginBridgeBundle:Default:index.html.twig',
+            array('name' => $samlResponse->getSessionExpirationDate()->format('c'))
+        );
     }
 }
