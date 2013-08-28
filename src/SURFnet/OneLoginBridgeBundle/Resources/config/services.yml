@@ -1,12 +1,13 @@
 parameters:
-    surfnet.onelogin_bridge.configuration.class:    SURFnet\OneLoginBridgeBundle\Service\Configuration
-    surfnet.onelogin_bridge.settings.class:         SURFnet\OneLoginBridgeBundle\Service\Settings
+    surfnet.onelogin_bridge.configuration.class:    SURFnet\OneLoginBridgeBundle\Saml\Configuration
+    surfnet.onelogin_bridge.settings.class:         SURFnet\OneLoginBridgeBundle\Saml\Settings
     surfnet.saml.request.class:                     OneLogin_Saml_AuthRequest
     surfnet.saml.metadata.class:                    OneLogin_Saml_Metadata
     surfnet.saml.response.class:                    SURFnet\OneLoginBridgeBundle\Service\ResponseAdapter
 
 services:
     surfnet.onelogin_bridge.configuration:
+        public: false
         class: %surfnet.onelogin_bridge.configuration.class%
         arguments:
             - @router
@@ -17,6 +18,7 @@ services:
             - %surfnet.onelogin_bridge.saml.certificate%
 
     surfnet.onelogin_bridge.settings:
+        public: false
         class: %surfnet.onelogin_bridge.settings.class%
         arguments: [@surfnet.onelogin_bridge.configuration]
 

@@ -3,6 +3,7 @@
 namespace SURFnet\OneLoginBridgeBundle\Service;
 
 use OneLogin_Saml_Response as SamlResponse;
+use SURFnet\OneLoginBridgeBundle\Saml\Settings;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -31,6 +32,9 @@ class ResponseAdapter
      */
     private $samlResponse;
 
+    /**
+     * @var array
+     */
     private $samlResponseAttributes;
 
     /**

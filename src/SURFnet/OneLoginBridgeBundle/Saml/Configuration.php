@@ -1,6 +1,6 @@
 <?php
 
-namespace SURFnet\OneLoginBridgeBundle\Service;
+namespace SURFnet\OneLoginBridgeBundle\Saml;
 
 use Symfony\Component\Routing\Router;
 

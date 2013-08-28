@@ -2,7 +2,7 @@
 
 namespace SURFnet\OneLoginBridgeBundle\DependencyInjection;
 
-use SURFnet\OneLoginBridgeBundle\Service\Settings;
+use SURFnet\OneLoginBridgeBundle\Saml\Settings;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
