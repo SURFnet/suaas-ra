@@ -2,6 +2,8 @@
 
 namespace SURFnet\OneLoginBridgeBundle\Service;
 
+use Symfony\Component\Routing\Router;
+
 /**
  * Class Configuration
  * @package SURFnet\OneLoginBridgeBundle\Service
@@ -38,6 +40,7 @@ class Configuration
     private $certificate;
 
     public function __construct(
+        Router $router,
         $targetUrl,
         $consumerUrl,
         $issuerName,
@@ -46,7 +49,7 @@ class Configuration
     )
     {
         $this->targetUrl = $targetUrl;
-        $this->consumerUrl = $consumerUrl;
+        $this->consumerUrl = $router->generate($consumerUrl, array(), Router::ABSOLUTE_URL);
         $this->issuerName = $issuerName;
         $this->nameIdentifierFormat = $nameIdentifierFormat;
         $this->certificate = $certificate;
