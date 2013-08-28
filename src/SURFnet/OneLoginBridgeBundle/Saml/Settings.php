@@ -11,7 +11,7 @@ use \OneLogin_Saml_Settings as BaseSettings;
  * Extension of the OneLogin_Saml_Settings class that allows for injection of
  * the configuration.
  *
- * @author Daan van Renterghem <dvrenterghem@gmail.com>
+ * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
  */
 class Settings extends BaseSettings
 {

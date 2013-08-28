@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/saml")
  *
- * @author Daan van Renterghem <dvrenterghem@gmail.com>
+ * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
  */
 class SamlController extends Controller
 {
@@ -49,7 +49,7 @@ class SamlController extends Controller
     {
         /** @var \SURFnet\OneLoginBridgeBundle\Service\ResponseAdapter $samlResponse */
         $samlResponse = $this->get('surfnet.saml.response');
-
+var_dump($samlResponse->getNameId());
         return $this->render(
             'SURFnetOneLoginBridgeBundle:Default:index.html.twig',
             array('name' => $samlResponse->getSessionExpirationDate()->format('c'))

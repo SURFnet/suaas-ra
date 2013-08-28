@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Router;
  *
  * DTO for the container parameters, to be injected into the Settings.
  *
- * @author Daan van Renterghem <dvrenterghem@gmail.com>
+ * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
  */
 class Configuration
 {
