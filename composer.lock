@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "55cee94c21c41ebdf76bd04b12425d78",
+    "hash": "03b249ccbf914102313b89eec947aada",
     "packages": [
         {
             "name": "doctrine/common",
@@ -742,6 +742,11 @@
                 "shasum": null
             },
             "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "OneLogin_": "src/"
+                }
+            },
             "time": "2012-10-25 18:29:18"
         },
         {
@@ -1306,16 +1311,16 @@
         },
         {
             "name": "twbs/bootstrap",
-            "version": "dev-master",
+            "version": "v2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "d977c9902d346862879f6b1c5cc4f8385ed27645"
+                "reference": "b4c4072679943773a7582daa63f545ba818fa627"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/d977c9902d346862879f6b1c5cc4f8385ed27645",
-                "reference": "d977c9902d346862879f6b1c5cc4f8385ed27645",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/b4c4072679943773a7582daa63f545ba818fa627",
+                "reference": "b4c4072679943773a7582daa63f545ba818fa627",
                 "shasum": ""
             },
             "type": "library",
@@ -1323,23 +1328,13 @@
             "license": [
                 "Apache-2.0"
             ],
-            "authors": [
-                {
-                    "name": "Mark Otto",
-                    "email": "markdotto@gmail.com"
-                },
-                {
-                    "name": "Jacob Thornton",
-                    "email": "jacobthornton@gmail.com"
-                }
-            ],
-            "description": "Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.",
-            "homepage": "http://getbootstrap.com",
+            "description": "Sleek, intuitive, and powerful front-end framework for faster and easier web development.",
+            "homepage": "http://twbs.github.com/bootstrap/",
             "keywords": [
                 "bootstrap",
                 "css"
             ],
-            "time": "2013-08-26 04:36:31"
+            "time": "2013-07-27 06:36:38"
         },
         {
             "name": "twig/extensions",
@@ -1448,7 +1443,6 @@
     "stability-flags": {
         "doctrine/migrations": 20,
         "doctrine/doctrine-migrations-bundle": 20,
-        "twbs/bootstrap": 20,
         "mopa/bootstrap-bundle": 20,
         "onelogin/php-saml": 20
     },
