@@ -50,17 +50,15 @@ class SamlController extends Controller
     {
         $samlResponseBody = $this->getRequest()->request->get('SAMLResponse', false);
         if ($samlResponseBody === false) {
-            throw new BadRequestHttpException(
-                'No "SAMLResponse" found in the request'
-            );
+            throw new BadRequestHttpException('No "SAMLResponse" found in the request');
         }
 
-        /** @var \SURFnet\OneLoginBridgeBundle\Service\ResponseAdapter $samlResponse */
+        /** @var \SURFnet\SuAAS\DomainBundle\Entity\SAMLIdentity $samlResponse */
         $samlResponse = $this->get('suaas.service.saml')->processResponse($samlResponseBody);
-var_dump($samlResponse->getNameId());
+
         return $this->render(
             'SURFnetOneLoginBridgeBundle:Default:index.html.twig',
-            array('name' => $samlResponse->getSessionExpirationDate()->format('c'))
+            array('identity' => $samlResponse)
         );
     }
 }
