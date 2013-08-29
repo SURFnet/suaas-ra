@@ -4,6 +4,7 @@ namespace SURFnet\OneLoginBridgeBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -12,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/saml")
  *
- * @author Daan van Renterghem <dvrenterghem@gmail.com>
+ * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
  */
 class SamlController extends Controller
 {
@@ -47,12 +48,17 @@ class SamlController extends Controller
      */
     public function consumerAction()
     {
-        /** @var \SURFnet\OneLoginBridgeBundle\Service\ResponseAdapter $samlResponse */
-        $samlResponse = $this->get('surfnet.saml.response');
+        $samlResponseBody = $this->getRequest()->request->get('SAMLResponse', false);
+        if ($samlResponseBody === false) {
+            throw new BadRequestHttpException('No "SAMLResponse" found in the request');
+        }
+
+        /** @var \SURFnet\SuAAS\DomainBundle\Entity\SAMLIdentity $samlResponse */
+        $samlResponse = $this->get('suaas.service.saml')->processResponse($samlResponseBody);
 
         return $this->render(
             'SURFnetOneLoginBridgeBundle:Default:index.html.twig',
-            array('name' => $samlResponse->getSessionExpirationDate()->format('c'))
+            array('identity' => $samlResponse)
         );
     }
 }

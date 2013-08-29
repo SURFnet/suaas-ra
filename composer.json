@@ -62,7 +62,8 @@
                     "type":"zip"
                 },
                 "autoload": {
-                    "psr-0": {"OneLogin_": "src/"}
+                    "psr-0": {"OneLogin_": "src/"},
+                    "files": ["ext/xmlseclibs/xmlseclibs.php"]
                 }
             }
         }

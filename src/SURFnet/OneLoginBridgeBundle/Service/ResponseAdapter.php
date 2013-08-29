@@ -3,9 +3,10 @@
 namespace SURFnet\OneLoginBridgeBundle\Service;
 
 use OneLogin_Saml_Response as SamlResponse;
-use SURFnet\OneLoginBridgeBundle\Saml\Settings;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use SURFnet\OneLoginBridgeBundle\SAML\Attribute\AttributeInterface;
+use SURFnet\OneLoginBridgeBundle\SAML\Attributes;
+use SURFnet\OneLoginBridgeBundle\SAML\Settings;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class ResponseAdapter
@@ -13,19 +14,19 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  *
  * Adapter for the OneLogin_Saml_Response.
  *
- * @author Daan van Renterghem <dvrenterghem@gmail.com>
+ * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
  */
 class ResponseAdapter
 {
     /**
-     * @var \Symfony\Component\HttpFoundation\Request
-     */
-    private $request;
-
-    /**
      * @var Settings
      */
     private $settings;
+
+    /**
+     * @var Attributes
+     */
+    private $samlAttributes;
 
     /**
      * @var \OneLogin_Saml_Response
@@ -33,20 +34,36 @@ class ResponseAdapter
     private $samlResponse;
 
     /**
-     * @var array
+     * @var ParameterBag
      */
     private $samlResponseAttributes;
 
     /**
      * Constructor
      *
-     * @param Settings $settings
-     * @param Request $request
+     * @param Settings   $settings
+     * @param Attributes $samlAttributes
      */
-    public function __construct(Settings $settings, Request $request)
+    public function __construct(Settings $settings, Attributes $samlAttributes)
     {
-        $this->request = $request;
         $this->settings = $settings;
+        $this->samlAttributes = $samlAttributes;
+    }
+
+    /**
+     * Sets the SAML response
+     *
+     * @param string $response
+     * @return ResponseAdapter
+     */
+    public function setSAMLResponse($response)
+    {
+        $this->samlResponse = new SamlResponse(
+            $this->settings,
+            $response
+        );
+
+        return $this;
     }
 
     /**
@@ -76,20 +93,15 @@ class ResponseAdapter
      */
     public function getSessionExpirationDate()
     {
-        $dateTime = new \DateTime();
-        return $dateTime->setTimestamp(
-            $this->getSamlResponse()->getSessionNotOnOrAfter()
-        );
-    }
+        $epoch = $this->getSamlResponse()->getSessionNotOnOrAfter();
 
-    /**
-     * Get all the attributes from the Saml Response
-     *
-     * @return array
-     */
-    public function getAttributes()
-    {
-        return $this->getResponseAttributes();
+        // keep consistent interface
+        if ($epoch === null) {
+            return null;
+        }
+
+        $dateTime = new \DateTime();
+        return $dateTime->setTimestamp($epoch);
     }
 
     /**
@@ -99,16 +111,41 @@ class ResponseAdapter
      * @param mixed  $default default value to return if the attribute does not exist
      *
      * @return mixed
+     *
+     * @throws \RangeException
      */
     public function getAttribute($name, $default = false)
     {
+        $samlAttribute = $this->samlAttributes->getAttribute($name);
         $attributes = $this->getResponseAttributes();
 
-        if (!array_key_exists($name, $attributes)) {
+        // @todo should be resolved internally, custom ParameterBag
+        // try first by urn:mace, then by urn:oid
+        if ($attributes->has($samlAttribute->getUrnMace())) {
+            $attribute = $attributes->get($samlAttribute->getUrnMace());
+        } elseif ($attributes->has($samlAttribute->getUrnOid())){
+            $attribute = $attributes->get($samlAttribute->getUrnOid());
+        } else {
             return $default;
         }
 
-        return $attributes[$name];
+        if ($samlAttribute->getMultiplicity() === AttributeInterface::SINGLE) {
+            $count = count($attribute);
+            if ($count > 1) {
+                throw new \RangeException(sprintf(
+                    'Attribute "%s" has a single-value multiplicity, yet returned'
+                    . ' "%d" values',
+                    $samlAttribute->getName(),
+                    count($attribute)
+                ));
+            } elseif ($count === 0) {
+                $attribute = null;
+            } else {
+                $attribute = reset($attribute);
+            }
+        }
+
+        return $attribute;
     }
 
     /**
@@ -116,32 +153,25 @@ class ResponseAdapter
      *
      * @return SamlResponse
      *
-     * @throws BadRequestHttpException
+     * @throws \LogicException
      */
     private function getSamlResponse()
     {
-        if (isset($this->samlResponse)) {
-            return $this->samlResponse;
-        }
-
-        $samlResponseBody = $this->request->request->get('SAMLResponse', false);
-        if ($samlResponseBody === false) {
-            throw new BadRequestHttpException(
-                'No SAMLResponse in the request.'
+        if (!isset($this->samlResponse)) {
+            // @todo create named exception
+            throw new \LogicException(
+                'Cannot retrieve response message, it has not been set yet.'
             );
         }
 
-        return $this->samlResponse = new SamlResponse(
-            $this->settings,
-            $samlResponseBody
-        );
+        return $this->samlResponse;
     }
 
     /**
      * Internal getter for all the attributes. Uses internal cache to prevent
      * expensive reparsing of the XML-structured saml response
      *
-     * @return array
+     * @return ParameterBag
      */
     private function getResponseAttributes()
     {
@@ -149,6 +179,8 @@ class ResponseAdapter
             return $this->samlResponseAttributes;
         }
 
-        return $this->samlResponseAttributes = $this->getSamlResponse()->getAttributes();
+        return $this->samlResponseAttributes = new ParameterBag(
+            $this->getSamlResponse()->getAttributes()
+        );
     }
 }
