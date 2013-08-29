@@ -1,6 +1,6 @@
 <?php
 
-namespace SURFnet\OneLoginBridgeBundle\Saml;
+namespace SURFnet\OneLoginBridgeBundle\SAML;
 
 use \OneLogin_Saml_Settings as BaseSettings;
 

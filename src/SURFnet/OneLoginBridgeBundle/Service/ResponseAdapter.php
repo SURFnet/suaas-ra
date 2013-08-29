@@ -3,9 +3,8 @@
 namespace SURFnet\OneLoginBridgeBundle\Service;
 
 use OneLogin_Saml_Response as SamlResponse;
-use SURFnet\OneLoginBridgeBundle\Saml\Settings;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use SURFnet\OneLoginBridgeBundle\SAML\Settings;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class ResponseAdapter
@@ -18,11 +17,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class ResponseAdapter
 {
     /**
-     * @var \Symfony\Component\HttpFoundation\Request
-     */
-    private $request;
-
-    /**
      * @var Settings
      */
     private $settings;
@@ -33,7 +27,7 @@ class ResponseAdapter
     private $samlResponse;
 
     /**
-     * @var array
+     * @var ParameterBag
      */
     private $samlResponseAttributes;
 
@@ -41,12 +35,26 @@ class ResponseAdapter
      * Constructor
      *
      * @param Settings $settings
-     * @param Request $request
      */
-    public function __construct(Settings $settings, Request $request)
+    public function __construct(Settings $settings)
     {
-        $this->request = $request;
         $this->settings = $settings;
+    }
+
+    /**
+     * Sets the SAML response
+     *
+     * @param string $response
+     * @return ResponseAdapter
+     */
+    public function setSAMLResponse($response)
+    {
+        $this->samlResponse = new SamlResponse(
+            $this->settings,
+            $response
+        );
+
+        return $this;
     }
 
     /**
@@ -76,20 +84,17 @@ class ResponseAdapter
      */
     public function getSessionExpirationDate()
     {
-        $dateTime = new \DateTime();
-        return $dateTime->setTimestamp(
-            $this->getSamlResponse()->getSessionNotOnOrAfter()
-        );
-    }
+        $epoch = $this->getSamlResponse()->getSessionNotOnOrAfter();
 
-    /**
-     * Get all the attributes from the Saml Response
-     *
-     * @return array
-     */
-    public function getAttributes()
-    {
-        return $this->getResponseAttributes();
+        // keep consistent interface
+        if ($epoch === null) {
+            return null;
+        }
+
+        // till we now for sure we can run 5.4 on remote servers, we are 5.3
+        // compatible!
+        $dateTime = new \DateTime();
+        return $dateTime->setTimestamp($epoch);
     }
 
     /**
@@ -102,13 +107,7 @@ class ResponseAdapter
      */
     public function getAttribute($name, $default = false)
     {
-        $attributes = $this->getResponseAttributes();
-
-        if (!array_key_exists($name, $attributes)) {
-            return $default;
-        }
-
-        return $attributes[$name];
+        return $this->getResponseAttributes()->get($name, $default);
     }
 
     /**
@@ -116,32 +115,25 @@ class ResponseAdapter
      *
      * @return SamlResponse
      *
-     * @throws BadRequestHttpException
+     * @throws \LogicException
      */
     private function getSamlResponse()
     {
-        if (isset($this->samlResponse)) {
-            return $this->samlResponse;
-        }
-
-        $samlResponseBody = $this->request->request->get('SAMLResponse', false);
-        if ($samlResponseBody === false) {
-            throw new BadRequestHttpException(
-                'No SAMLResponse in the request.'
+        if (!isset($this->samlResponse)) {
+            // @todo create named exception
+            throw new \LogicException(
+                'Cannot retrieve response message, it has not been set yet.'
             );
         }
 
-        return $this->samlResponse = new SamlResponse(
-            $this->settings,
-            $samlResponseBody
-        );
+        return $this->samlResponse;
     }
 
     /**
      * Internal getter for all the attributes. Uses internal cache to prevent
      * expensive reparsing of the XML-structured saml response
      *
-     * @return array
+     * @return ParameterBag
      */
     private function getResponseAttributes()
     {
@@ -149,6 +141,8 @@ class ResponseAdapter
             return $this->samlResponseAttributes;
         }
 
-        return $this->samlResponseAttributes = $this->getSamlResponse()->getAttributes();
+        return $this->samlResponseAttributes = new ParameterBag(
+            $this->getSamlResponse()->getAttributes()
+        );
     }
 }

@@ -1,6 +1,6 @@
 parameters:
-    surfnet.onelogin_bridge.configuration.class:    SURFnet\OneLoginBridgeBundle\Saml\Configuration
-    surfnet.onelogin_bridge.settings.class:         SURFnet\OneLoginBridgeBundle\Saml\Settings
+    surfnet.onelogin_bridge.configuration.class:    SURFnet\OneLoginBridgeBundle\SAML\Configuration
+    surfnet.onelogin_bridge.settings.class:         SURFnet\OneLoginBridgeBundle\SAML\Settings
     surfnet.saml.request.class:                     OneLogin_Saml_AuthRequest
     surfnet.saml.metadata.class:                    OneLogin_Saml_Metadata
     surfnet.saml.response.class:                    SURFnet\OneLoginBridgeBundle\Service\ResponseAdapter
@@ -31,6 +31,6 @@ services:
         arguments: [@surfnet.onelogin_bridge.settings]
 
     surfnet.saml.response:
-        scope: request
         class: %surfnet.saml.response.class%
-        arguments: [@surfnet.onelogin_bridge.settings, @request]
+        arguments: [@surfnet.onelogin_bridge.settings]
+
