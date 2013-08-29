@@ -15,7 +15,6 @@ class IdentityResolver
     {
         return new SAMLIdentity(
             $response->getNameId(),
-            $response->getAttribute(Uid::NAME),
             $response->getAttribute(SchacHomeOrganisation::NAME),
             $response->getAttribute(DisplayName::NAME),
             $response->getAttribute(Mail::NAME)

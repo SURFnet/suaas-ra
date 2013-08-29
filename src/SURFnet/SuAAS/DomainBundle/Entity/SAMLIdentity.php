@@ -12,13 +12,11 @@ class SAMLIdentity
 
     public function __construct(
         $nameId,
-        $uid,
         $schacHomeOrgansation,
         $displayName = null,
         $email = null
     ) {
         $this->nameId = $nameId;
-        $this->uid = $uid;
         $this->schacHomeOrganisation = $schacHomeOrgansation;
         $this->displayName = $displayName;
         $this->email = $email;
@@ -27,11 +25,6 @@ class SAMLIdentity
     public function getNameId()
     {
         return $this->nameId;
-    }
-
-    public function getUid()
-    {
-        return $this->uid;
     }
 
     public function getSchacHomeOrganisation()
