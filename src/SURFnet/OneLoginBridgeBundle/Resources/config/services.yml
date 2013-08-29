@@ -1,9 +1,14 @@
 parameters:
-    surfnet.onelogin_bridge.configuration.class:    SURFnet\OneLoginBridgeBundle\SAML\Configuration
-    surfnet.onelogin_bridge.settings.class:         SURFnet\OneLoginBridgeBundle\SAML\Settings
-    surfnet.saml.request.class:                     OneLogin_Saml_AuthRequest
-    surfnet.saml.metadata.class:                    OneLogin_Saml_Metadata
-    surfnet.saml.response.class:                    SURFnet\OneLoginBridgeBundle\Service\ResponseAdapter
+    surfnet.onelogin_bridge.configuration.class:            SURFnet\OneLoginBridgeBundle\SAML\Configuration
+    surfnet.onelogin_bridge.settings.class:                 SURFnet\OneLoginBridgeBundle\SAML\Settings
+    surfnet.saml.attributes.class:                          SURFnet\OneLoginBridgeBundle\SAML\Attributes
+    surfnet.saml.attribute.display_name.class:              SURFnet\OneLoginBridgeBundle\SAML\Attribute\DisplayName
+    surfnet.saml.attribute.mail.class:                      SURFnet\OneLoginBridgeBundle\SAML\Attribute\Mail
+    surfnet.saml.attribute.schac_home_organisation.class:   SURFnet\OneLoginBridgeBundle\SAML\Attribute\SchacHomeOrganisation
+    surfnet.saml.attribute.uid.class:                       SURFnet\OneLoginBridgeBundle\SAML\Attribute\Uid
+    surfnet.saml.request.class:                             OneLogin_Saml_AuthRequest
+    surfnet.saml.metadata.class:                            OneLogin_Saml_Metadata
+    surfnet.saml.response.class:                            SURFnet\OneLoginBridgeBundle\Service\ResponseAdapter
 
 services:
     surfnet.onelogin_bridge.configuration:
@@ -32,5 +37,27 @@ services:
 
     surfnet.saml.response:
         class: %surfnet.saml.response.class%
-        arguments: [@surfnet.onelogin_bridge.settings]
+        arguments: [@surfnet.onelogin_bridge.settings, @surfnet.saml.attributes]
 
+    surfnet.saml.attributes:
+        class: %surfnet.saml.attributes.class%
+
+    surfnet.saml.attribute.display_name:
+        class: %surfnet.saml.attribute.display_name.class%
+        tags:
+            -  { name: saml.attribute }
+
+    surfnet.saml.attribute.mail:
+        class: %surfnet.saml.attribute.mail.class%
+        tags:
+            -  { name: saml.attribute }
+
+    surfnet.saml.attribute.schac_home_organisation:
+        class: %surfnet.saml.attribute.schac_home_organisation.class%
+        tags:
+            -  { name: saml.attribute }
+
+    surfnet.saml.attribute.uid:
+        class: %surfnet.saml.attribute.uid.class%
+        tags:
+            -  { name: saml.attribute }
