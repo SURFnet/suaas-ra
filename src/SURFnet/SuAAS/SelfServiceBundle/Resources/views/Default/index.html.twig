@@ -1,1 +1,12 @@
-Hello {{ name }}!
+{% extends '::base.html.twig' %}
+
+{% block content %}
+    <div class="row-fluid">
+        <div class="span6 offset3">
+            <h1>Hallo!</h1>
+            <div class="well">
+                Dit is een test-applicatie. Er is nu nog niets te zien.
+            </div>
+        </div>
+    </div>
+{% endblock %}

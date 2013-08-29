@@ -1,6 +1,7 @@
 surfnet_suaas_self_service:
-    resource: "@SURFnetSuAASSelfServiceBundle/Resources/config/routing.yml"
-    prefix:   /self-service
+    resource: "@SURFnetSuAASSelfServiceBundle/Controller/"
+    type: annotation
+    prefix:   /
 
 surfnet_suaas_ra:
     resource: "@SURFnetSuAASRABundle/Resources/config/routing.yml"

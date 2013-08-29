@@ -2,12 +2,28 @@
 
 namespace SURFnet\SuAAS\SelfServiceBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class DefaultController
+ * @package SURFnet\SuAAS\SelfServiceBundle\Controller
+ *
+ * @Route("/")
+ *
+ * @author Daan van Renterghem <dvrenterghem@gmail.com>
+ */
 class DefaultController extends Controller
 {
-    public function indexAction($name)
+    /**
+     * @Route("/")
+     * @Template()
+     *
+     * @return array
+     */
+    public function indexAction()
     {
-        return $this->render('SURFnetSuAASSelfServiceBundle:Default:index.html.twig', array('name' => $name));
+        return array();
     }
 }
