@@ -1,7 +1,15 @@
 parameters:
-#    sur_fnet_su_aas_domain.example.class: SURFnet\SuAAS\DomainBundle\Example
+    suaas.service.saml.class:                       SURFnet\SuAAS\DomainBundle\Service\SAMLService
+    suaas.service.saml.identity_resolver.class:    SURFnet\SuAAS\DomainBundle\Service\SAML\IdentityResolver
 
 services:
-#    sur_fnet_su_aas_domain.example:
-#        class: %sur_fnet_su_aas_domain.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    suaas.service.saml:
+        class: %suaas.service.saml.class%
+        arguments:
+            - @surfnet.saml.response
+            - @suaas.service.saml.identity_resolver
+
+    suaas.service.saml.identity_resolver:
+        class: %suaas.service.saml.identity_resolver.class%
+        arguments:
+            - @surfnet.saml.attributes

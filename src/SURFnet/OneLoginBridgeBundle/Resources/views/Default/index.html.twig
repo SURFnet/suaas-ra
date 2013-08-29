@@ -3,5 +3,33 @@
 {% block title %}Login{% endblock title %}
 
 {% block content %}
-Hello {{ name }}!
+    <div class="row-fluidg">
+        <div class="span6 offset3">
+            <h1>Hello!</h1>
+            <div class="alert alert-success">
+                <strong>Woohoo!</strong> Je bent succesvol ingelogd.
+            </div>
+            <h3>Deze gegevens zijn van je bekend:</h3>
+            <table class="table table-striped table-hover">
+                <tbody>
+                    <tr>
+                        <td><strong>ID</strong></td>
+                        <td>{{ identity.nameId }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Eigen Organisatie:</strong></td>
+                        <td>{{ identity.schacHomeOrganisation }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Weergave Naam:</strong></td>
+                        <td>{{ identity.displayName }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email:</strong></td>
+                        <td>{{ identity.email }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}
