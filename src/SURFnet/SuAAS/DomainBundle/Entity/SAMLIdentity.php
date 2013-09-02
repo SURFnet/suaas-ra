@@ -42,13 +42,15 @@ class SAMLIdentity implements \Serializable
         return $this->email;
     }
 
-    public function seralize()
+    public function serialize()
     {
         return serialize(
-            $this->nameId,
-            $this->schacHomeOrganisation,
-            $this->displayName,
-            $this->email
+            array(
+                $this->nameId,
+                $this->schacHomeOrganisation,
+                $this->displayName,
+                $this->email
+            )
         );
     }
 
