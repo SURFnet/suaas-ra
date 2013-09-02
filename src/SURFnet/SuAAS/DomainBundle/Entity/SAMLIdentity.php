@@ -2,7 +2,7 @@
 
 namespace SURFnet\SuAAS\DomainBundle\Entity;
 
-class SAMLIdentity
+class SAMLIdentity implements \Serializable
 {
     private $nameId;
     private $uid;
@@ -40,5 +40,25 @@ class SAMLIdentity
     public function getEmail()
     {
         return $this->email;
+    }
+
+    public function seralize()
+    {
+        return serialize(
+            $this->nameId,
+            $this->schacHomeOrganisation,
+            $this->displayName,
+            $this->email
+        );
+    }
+
+    public function unserialize($serialized)
+    {
+       list(
+           $this->nameId,
+           $this->schacHomeOrganisation,
+           $this->displayName,
+           $this->email
+       ) = unserialize($serialized);
     }
 }
