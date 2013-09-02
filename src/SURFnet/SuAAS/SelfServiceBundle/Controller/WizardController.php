@@ -36,6 +36,8 @@ class WizardController extends Controller
      */
     public function selectTokenAction()
     {
-        throw new HttpException(418, 'Not Yet Implemented');
+        return array(
+            'user' => $this->get('security.context')->getToken()->getUser()
+        );
     }
 }
