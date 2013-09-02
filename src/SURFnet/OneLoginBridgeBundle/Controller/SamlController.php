@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SamlController extends Controller
 {
     /**
-     * @Route("/login")
+     * @Route("/login", name="saml_login")
      *
      * @return Response
      */
@@ -45,6 +45,8 @@ class SamlController extends Controller
      * @Route("/consume", name="saml_consume")
      *
      * @return Response
+     *
+     * @throws BadRequestHttpException
      */
     public function consumerAction()
     {
@@ -53,12 +55,16 @@ class SamlController extends Controller
             throw new BadRequestHttpException('No "SAMLResponse" found in the request');
         }
 
-        /** @var \SURFnet\SuAAS\DomainBundle\Entity\SAMLIdentity $samlResponse */
-        $samlResponse = $this->get('suaas.service.saml')->processResponse($samlResponseBody);
+        // @todo resolving to identity + token should be done in firewall
+        /** @var \SURFnet\SuAAS\DomainBundle\Entity\SAMLIdentity $samlIdentity */
+        $samlIdentity = $this->get('suaas.service.saml')->processResponse($samlResponseBody);
 
         return $this->render(
             'SURFnetOneLoginBridgeBundle:Default:index.html.twig',
-            array('identity' => $samlResponse)
+            array(
+                'identity' => $samlIdentity,
+                'target' => $this->get('session')->get('target')
+            )
         );
     }
 }
