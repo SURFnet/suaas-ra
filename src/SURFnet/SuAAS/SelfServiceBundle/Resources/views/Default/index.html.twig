@@ -1,11 +1,23 @@
 {% extends '::base.html.twig' %}
 
+{% block title %}Step-up Authentication As A Service{% endblock title %}
+
 {% block content %}
     <div class="row-fluid">
         <div class="span6 offset3">
-            <h1>Hallo!</h1>
-            <div class="well">
-                Dit is een test-applicatie. Er is nu nog niets te zien.
+            <h1>SuAAS-RA</h1>
+            <div class="alert alert-info">
+                <p><strong>Welcome at SuAAS-RA</strong></p>
+                <p>
+                    ....additional information....
+                </p>
+                <p>
+                    Please select one of the two workflows to get started.
+                </p>
+            </div>
+            <div>
+                <a class="btn btn-info" href="#" title="Registration Authority">Registration Authority</a>
+                <a class="btn btn-primary pull-right" href="{{ path('self_registration_start') }}" title="Self Registration">Self Registration</a>
             </div>
         </div>
     </div>
