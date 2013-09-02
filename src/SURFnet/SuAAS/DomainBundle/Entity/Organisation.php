@@ -37,4 +37,24 @@ class Organisation
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
      */
     private $createdAt;
+
+    public function __construct(array $data = array())
+    {
+        foreach ($data as $property => $value) {
+            if (!property_exists($this, $property)) {
+                throw new \RuntimeException(sprintf(
+                    'Property "%s" does not exist in class "%s"',
+                    $property,
+                    get_class($this)
+                ));
+            }
+
+            $this->{$property} = $value;
+        }
+    }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

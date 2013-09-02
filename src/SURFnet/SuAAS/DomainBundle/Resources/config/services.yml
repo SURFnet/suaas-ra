@@ -1,8 +1,16 @@
 parameters:
+    suaas.service.orm.class:                        SURFnet\SuAAS\DomainBundle\Service\OrmSerivce
     suaas.service.saml.class:                       SURFnet\SuAAS\DomainBundle\Service\SAMLService
-    suaas.service.saml.identity_resolver.class:    SURFnet\SuAAS\DomainBundle\Service\SAML\IdentityResolver
+    suaas.service.saml.identity_resolver.class:     SURFnet\SuAAS\DomainBundle\Service\SAML\IdentityResolver
+    suaas.service.user.class:                       SURFnet\SuAAS\DomainBundle\Service\UserService
+    domainbundle.repository.user.class:             SURFnet\SuAAS\DomainBundle\Entity\UserRepository
 
 services:
+    suaas.service.orm:
+        class: %suaas.service.orm.class%
+        arguments:
+            - @doctrine
+
     suaas.service.saml:
         class: %suaas.service.saml.class%
         arguments:
@@ -13,3 +21,7 @@ services:
         class: %suaas.service.saml.identity_resolver.class%
         arguments:
             - @surfnet.saml.attributes
+
+    suaas.service.user:
+        class: %suaas.service.user.class%
+        parent: suaas.service.orm
