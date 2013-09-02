@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/")
  *
- * @author Daan van Renterghem <dvrenterghem@gmail.com>
+ * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
  */
 class DefaultController extends Controller
 {

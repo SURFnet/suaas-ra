@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  *
  * Authentication provider
  *
- * @author Daan van Renterghem <dvrenterghem@gmail.com>
+ * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
  */
 class SAMLProvider implements AuthenticationProviderInterface
 {

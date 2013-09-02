@@ -18,7 +18,7 @@ use Symfony\Component\Security\Http\Firewall\ListenerInterface;
  *
  * Listener for the Firewall that uses the SAML Auth provider to authenticate users
  *
- * @author Daan van Renterghem <dvrenterghem@gmail.com>
+ * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
  */
 class SamlListener implements ListenerInterface
 {

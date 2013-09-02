@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/self-service")
  *
- * @author Daan van Renterghem <dvrenterghem@gmail.com>
+ * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
  */
 class WizardController extends Controller
 {

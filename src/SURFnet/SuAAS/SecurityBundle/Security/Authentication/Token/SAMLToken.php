@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
  *
  * Security Token
  *
- * @author Daan van Renterghem <dvrenterghem@gmail.com>
+ * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
  */
 class SAMLToken extends AbstractToken
 {

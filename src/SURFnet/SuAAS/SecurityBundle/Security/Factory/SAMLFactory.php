@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Reference;
  * Factory for the SAML security provider. Allows to reuse the provider in
  * multiple firewalls
  *
- * @author Daan van Renterghem <dvrenterghem@gmail.com>
+ * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
  */
 class SAMLFactory implements SecurityFactoryInterface
 {
