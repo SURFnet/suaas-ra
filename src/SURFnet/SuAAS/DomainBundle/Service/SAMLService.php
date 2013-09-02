@@ -34,9 +34,4 @@ class SAMLService
 
         return $this->identityResolver->parse($this->samlResponse);
     }
-
-    public function login()
-    {
-
-    }
 }
