@@ -38,19 +38,22 @@ class Organisation
      */
     private $createdAt;
 
-    public function __construct(array $data = array())
+    public function create($name)
     {
-        foreach ($data as $property => $value) {
-            if (!property_exists($this, $property)) {
-                throw new \RuntimeException(sprintf(
-                    'Property "%s" does not exist in class "%s"',
-                    $property,
-                    get_class($this)
-                ));
-            }
-
-            $this->{$property} = $value;
+        if ($this->id) {
+            throw new \LogicException(
+                "Cannot create an Organisation when that Organisation already has an ID"
+            );
         }
+
+        if (!is_string($name)) {
+            throw new \InvalidArgumentException(
+                '$name must be a string'
+            );
+        }
+
+        $this->name = $name;
+        $this->createdAt = new \DateTime('now');
     }
 
     public function __toString()

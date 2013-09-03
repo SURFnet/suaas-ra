@@ -35,13 +35,12 @@ class UserService extends ORMService implements UserProviderInterface
         if (!$user instanceof User) {
 
             $organisation = $this->resolveOrganisation($identity->getSchacHomeOrganisation());
-            $user = new User(
-                array(
-                    'nameId' => $identity->getNameId(),
-                    'organisation' => $organisation,
-                    'displayName' => $identity->getDisplayName(),
-                    'email' => $identity->getEmail()
-                )
+            $user = new User();
+            $user->create(
+                $identity->getNameId(),
+                $organisation,
+                $identity->getDisplayName(),
+                $identity->getEmail()
             );
 
             $this->persist($user)->flush();
@@ -59,12 +58,8 @@ class UserService extends ORMService implements UserProviderInterface
         $organisation = $organisationRepository->findByName($organisationName);
 
         if (!$organisation instanceof Organisation) {
-            $organisation = new Organisation(
-                array(
-                    'name' => $organisationName,
-                    'createdAt' => new \DateTime('now')
-                )
-            );
+            $organisation = new Organisation();
+            $organisation->create($organisationName);
 
             $this->persist($organisation);
         }

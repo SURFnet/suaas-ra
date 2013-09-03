@@ -68,19 +68,26 @@ class User implements UserInterface, EquatableInterface, \Serializable
      */
     private $registrationAuthority;
 
-    public function __construct(array $data = array())
+    public function create($nameId, Organisation $organisation, $displayName, $email)
     {
-        foreach ($data as $property => $value) {
-            if (!property_exists($this, $property)) {
-                throw new \RuntimeException(sprintf(
-                    'Property "%s" does not exist in class "%s"',
-                    $property,
-                    get_class($this)
-                ));
-            }
-
-            $this->{$property} = $value;
+        if ($this->id) {
+            throw new \LogicException(
+                "Cannot create a User form a user that already has an ID"
+            );
         }
+
+        // @todo expand and implement
+//        if (!is_string($nameId)) {
+//            throw new \InvalidArgumentException(
+//                ""
+//            )
+//        }
+        $this->nameId = $nameId;
+        $this->organisation = $organisation;
+        $this->displayName = $displayName;
+        $this->email = $email;
+
+        return $this;
     }
 
     public function getUsername()
