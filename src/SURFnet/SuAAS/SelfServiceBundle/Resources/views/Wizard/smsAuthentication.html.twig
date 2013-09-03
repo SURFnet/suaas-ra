@@ -1,0 +1,9 @@
+{% extends "SURFnetSuAASSelfServiceBundle:Wizard:linkToken.html.twig" %}
+
+{% block title %}{{ parent() }} - SMS{% endblock title %}
+
+{% block block_contents %}
+    <p>
+        Please enter the One-Time-Password sent to {{ token.readablePhoneNumber }} you by SMS
+    </p>
+{% endblock %}

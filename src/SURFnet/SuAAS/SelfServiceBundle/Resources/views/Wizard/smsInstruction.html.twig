@@ -11,5 +11,9 @@
         <li>Enter your phone-number in the form below</li>
         <li>When you click "Proceed", you will receive an SMS. On the next page, please enter the One-Time-Password.</li>
     </ol>
-    {#{{ form_rest(form) }}#}
+    <p>
+        <form action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" method="post" class="form-horizontal offset-top" {{ form_enctype(form) }}>
+            {{ form_rest(form) }}
+        </form>
+    </p>
 {% endblock %}
