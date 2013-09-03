@@ -1,0 +1,18 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}SuAAS - Self Service - Link Token{% endblock title %}
+
+{% block content %}
+    <div class="row-fluid">
+        <div class="span8 offset2">
+            <div class="header clearfix">
+                <h1 class="pull-left">User Self Registration</h1>
+                {% image '@SURFnetSuAASSelfServiceBundle/Resources/public/images/SURFnet_logo.jpg' %}
+                    <img src="{{ asset_url }}" class="pull-right" alt="SURFnet Logo"/>
+                {% endimage %}
+            </div>
+            {{ wizardHeader(2) }}
+            {% block block_contents %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

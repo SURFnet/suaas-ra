@@ -18,23 +18,36 @@ use Symfony\Component\Routing\Annotation\Route;
 class WizardController extends Controller
 {
     /**
-     * @Route("/start", name="self_registration_start")
+     * @Route("/start", name="self_service_start")
      *
      * @return array
      */
     public function indexAction()
     {
-        $this->get('session')->set('target', 'self_registration_selecttoken');
+        $this->get('session')->set('target', 'self_service_selecttoken');
         return $this->redirect($this->generateUrl('saml_login'));
     }
 
     /**
-     * @Route("/select-token", name="self_registration_selecttoken")
+     * @Route("/select-token", name="self_service_selecttoken")
      * @Template()
      *
      * @return array
      */
     public function selectTokenAction()
+    {
+        return array(
+            'user' => $this->get('security.context')->getToken()->getUser()
+        );
+    }
+
+    /**
+     * @Route("/link-token/sms/instruction", name="self_service_link_sms_instr")
+     * @Template("SURFnetSuAASSelfServiceBundle:Wizard:smsInstruction.html.twig")
+     *
+     * @return array
+     */
+    public function linkTokenInstructionAction()
     {
         return array(
             'user' => $this->get('security.context')->getToken()->getUser()
