@@ -3,25 +3,13 @@
 {% block title %}{{ parent() }} - SMS{% endblock title %}
 
 {% block block_contents %}
-    <div class="row-fluid">
-        <div class="span8">
-            <div class="alert alert-info">
-                <p>
-                    You have choosen to link an SMS based one-time-password to you account <strong>{{ user.email }}</strong>
-                </p>
-            </div>
-            <p>
-                To link the SMS based one-time-password, please follow the next steps
-            </p>
-            <ol>
-                <li>Please ensure your mobile phone has a signal and can receive SMS</li>
-                <li>Enter your phone-number in the form below</li>
-                <li>When you click "Proceed", you will receive an SMS. On the next page, please enter the One-Time-Password.</li>
-            </ol>
-            {#{{ form_rest(form) }}#}
-        </div>
-        <div class="span4">
-            {{ tokenThumbnails(false, {1:"SMS"}) }}
-        </div>
-    </div>
+    <p>
+        To link the SMS based one-time-password, please follow the next steps
+    </p>
+    <ol>
+        <li>Please ensure your mobile phone has a signal and can receive SMS</li>
+        <li>Enter your phone-number in the form below</li>
+        <li>When you click "Proceed", you will receive an SMS. On the next page, please enter the One-Time-Password.</li>
+    </ol>
+    {#{{ form_rest(form) }}#}
 {% endblock %}

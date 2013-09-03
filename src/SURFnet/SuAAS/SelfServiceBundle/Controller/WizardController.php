@@ -50,7 +50,9 @@ class WizardController extends Controller
     public function linkTokenInstructionAction()
     {
         return array(
-            'user' => $this->get('security.context')->getToken()->getUser()
+            'user' => $this->get('security.context')->getToken()->getUser(),
+            'tokenType' => 'SMS',
+            'tokenExtended' => 'an SMS based one-time-password'
         );
     }
 }
