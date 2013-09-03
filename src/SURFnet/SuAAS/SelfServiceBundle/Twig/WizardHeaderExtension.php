@@ -42,7 +42,7 @@ class WizardHeaderExtension extends Extension
 
         return $this->environment->render(
             'SURFnetSuAASSelfServiceBundle:Wizard:wizardHeader.html.twig',
-            array('width' => $barWidth)
+            array('width' => $barWidth, 'step' => $stepNumber)
         );
     }
 
