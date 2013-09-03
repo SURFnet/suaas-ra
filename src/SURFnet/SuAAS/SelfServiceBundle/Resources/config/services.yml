@@ -1,7 +1,8 @@
 parameters:
-#    sur_fnet_su_aas_self_service.example.class: SURFnet\SuAAS\SelfServiceBundle\Example
+    suaas.twig.wizard_header_extension.class:           SURFnet\SuAAS\SelfServiceBundle\Twig\WizardHeaderExtension
 
 services:
-#    sur_fnet_su_aas_self_service.example:
-#        class: %sur_fnet_su_aas_self_service.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    suaas.twig.wizard_header_extension:
+        class: %suaas.twig.wizard_header_extension.class%
+        tags:
+            - { name: twig.extension }
