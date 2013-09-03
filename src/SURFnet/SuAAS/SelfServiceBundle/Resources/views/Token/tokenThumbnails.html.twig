@@ -1,0 +1,82 @@
+<div class="row-fluid token-selection">
+    <ul class="thumbnails">
+        {% if showAll == true or showTiqr == true %}
+        <li class="span{{ width }}">
+            <div class="thumbnail">
+                {% image '@SURFnetSuAASSelfServiceBundle/Resources/public/images/tiqr.png' %}
+                    <img src="{{ asset_url }}" alt="SURFnet Logo"/>
+                {% endimage %}
+                <div class="caption">
+                    <h4>Tiqr</h4>
+                    <p class="description">
+                        Use the <a href="http://www.tiqr.org" target="_blank" title="Tiqr">Tiqr</a> mobile application for login
+                    </p>
+                    <p class="ranking">
+                        <i class="icon-lock icon-2x text-warning"></i>
+                        <i class="icon-lock icon-2x text-warning"></i>
+                        <i class="icon-lock icon-2x muted"></i>
+                        <i class="icon-lock icon-2x muted"></i>
+                    </p>
+                    {% if showLink == true %}
+                    <p>
+                        <a class="btn btn-primary" href="#">Use Tiqr</a>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </li>
+        {% endif %}
+        {% if showAll == true or showSMS == true %}
+        <li class="span{{ width }}">
+            <div class="thumbnail">
+                {% image '@SURFnetSuAASSelfServiceBundle/Resources/public/images/sms.png' %}
+                    <img src="{{ asset_url }}" alt="SURFnet Logo"/>
+                {% endimage %}
+                <div class="caption">
+                    <h4>SMS</h4>
+                    <p class="description">
+                        Have one-time-passwords sent to you via SMS
+                    </p>
+                    <p class="ranking">
+                        <i class="icon-lock icon-2x text-warning"></i>
+                        <i class="icon-lock icon-2x text-warning"></i>
+                        <i class="icon-lock icon-2x muted"></i>
+                        <i class="icon-lock icon-2x muted"></i>
+                    </p>
+                    {% if showLink == true %}
+                    <p>
+                        <a class="btn btn-primary" href="{{ path("self_service_link_sms_instr") }}">Use SMS</a>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </li>
+        {% endif %}
+        {% if showAll == true or showYubikey == true %}
+        <li class="span{{ width }}">
+            <div class="thumbnail">
+                {% image '@SURFnetSuAASSelfServiceBundle/Resources/public/images/yubikey.jpg' %}
+                    <img src="{{ asset_url }}" alt="Yubikey"/>
+                {% endimage %}
+                <div class="caption">
+                    <h4>Yubikey</h4>
+                    <p class="description">
+                        Use your Yubikey to generate one-time-passwords
+                    </p>
+                    <p class="ranking">
+                        <i class="icon-lock icon-2x text-warning"></i>
+                        <i class="icon-lock icon-2x text-warning"></i>
+                        <i class="icon-lock icon-2x text-warning"></i>
+                        <i class="icon-lock icon-2x muted"></i>
+                    </p>
+                    {% if showLink == true %}
+                    <p>
+                        <a class="btn btn-primary" href="#">Use Yubikey</a>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </li>
+        {% endif %}
+    </ul>
+</div>

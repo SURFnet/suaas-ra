@@ -1,8 +1,14 @@
 parameters:
     suaas.twig.wizard_header_extension.class:           SURFnet\SuAAS\SelfServiceBundle\Twig\WizardHeaderExtension
+    suaas.twig.token_thumbnail_extension.class:         SURFnet\SuAAS\SelfServiceBundle\Twig\TokenThumbnailExtension
 
 services:
     suaas.twig.wizard_header_extension:
         class: %suaas.twig.wizard_header_extension.class%
+        tags:
+            - { name: twig.extension }
+
+    suaas.twig.token_thumbnial_extension:
+        class: %suaas.twig.token_thumbnail_extension.class%
         tags:
             - { name: twig.extension }
