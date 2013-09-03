@@ -1,6 +1,13 @@
 {% extends 'MopaBootstrapBundle::base.html.twig' %}
 
 {% block title %}{% endblock title %}
+{% block head_style %}
+    {% stylesheets
+        '@SURFnetSuAASSelfServiceBundle/Resources/public/less/base.less'
+    %}
+    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+    {% endstylesheets %}
+{% endblock head_style %}
 
 {# body #}
     {% block navbar %}
