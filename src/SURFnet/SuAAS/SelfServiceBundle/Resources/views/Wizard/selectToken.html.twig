@@ -22,76 +22,7 @@
             <p>
                 Please select the token you wish to register from the options shown below:
             </p>
-            <div class="row-fluid token-selection">
-                <ul class="thumbnails">
-                    <li class="span4">
-                        <div class="thumbnail">
-                            {% image '@SURFnetSuAASSelfServiceBundle/Resources/public/images/tiqr.png' %}
-                                <img src="{{ asset_url }}" alt="SURFnet Logo"/>
-                            {% endimage %}
-                            <div class="caption">
-                                <h4>Tiqr</h4>
-                                <p class="description">
-                                    Use the <a href="http://www.tiqr.org" target="_blank" title="Tiqr">Tiqr</a> mobile application for login
-                                </p>
-                                <p class="ranking">
-                                    <i class="icon-lock icon-2x text-warning"></i>
-                                    <i class="icon-lock icon-2x text-warning"></i>
-                                    <i class="icon-lock icon-2x muted"></i>
-                                    <i class="icon-lock icon-2x muted"></i>
-                                </p>
-                                <p>
-                                    <a class="btn btn-primary" href="#">Use Tiqr</a>
-                                </p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="span4">
-                        <div class="thumbnail">
-                            {% image '@SURFnetSuAASSelfServiceBundle/Resources/public/images/sms.png' %}
-                                <img src="{{ asset_url }}" alt="SURFnet Logo"/>
-                            {% endimage %}
-                            <div class="caption">
-                                <h4>SMS</h4>
-                                <p class="description">
-                                    Have one-time-passwords sent to you via SMS
-                                </p>
-                                <p class="ranking">
-                                    <i class="icon-lock icon-2x text-warning"></i>
-                                    <i class="icon-lock icon-2x text-warning"></i>
-                                    <i class="icon-lock icon-2x muted"></i>
-                                    <i class="icon-lock icon-2x muted"></i>
-                                </p>
-                                <p>
-                                    <a class="btn btn-primary" href="#">Use SMS</a>
-                                </p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="span4">
-                        <div class="thumbnail">
-                            {% image '@SURFnetSuAASSelfServiceBundle/Resources/public/images/yubikey.jpg' %}
-                                <img src="{{ asset_url }}" alt="Yubikey"/>
-                            {% endimage %}
-                            <div class="caption">
-                                <h4>Yubikey</h4>
-                                <p class="description">
-                                    Use your Yubikey to generate one-time-passwords
-                                </p>
-                                <p class="ranking">
-                                    <i class="icon-lock icon-2x text-warning"></i>
-                                    <i class="icon-lock icon-2x text-warning"></i>
-                                    <i class="icon-lock icon-2x text-warning"></i>
-                                    <i class="icon-lock icon-2x muted"></i>
-                                </p>
-                                <p>
-                                    <a class="btn btn-primary" href="#">Use Yubikey</a>
-                                </p>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+            {{ tokenThumbnails() }}
         </div>
     </div>
 {% endblock %}
