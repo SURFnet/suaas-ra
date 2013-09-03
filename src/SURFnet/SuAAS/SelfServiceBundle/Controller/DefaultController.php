@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/")
+     * @Route("/", name="landing")
      * @Template()
      *
      * @return array
@@ -25,5 +25,18 @@ class DefaultController extends Controller
     public function indexAction()
     {
         return array();
+    }
+
+    /**
+     * @Route("/logout")
+     * @Template()
+     *
+     * @return array
+     */
+    public function logoutAction()
+    {
+        $this->get('session')->invalidate();
+
+        return $this->redirect($this->generateUrl('landing'));
     }
 }
