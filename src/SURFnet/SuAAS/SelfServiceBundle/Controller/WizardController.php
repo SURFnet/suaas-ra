@@ -4,7 +4,9 @@ namespace SURFnet\SuAAS\SelfServiceBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use SURFnet\SuAAS\DomainBundle\Command\CreateMollieCommand;
+use SURFnet\SuAAS\DomainBundle\Command\VerifyMollieTokenCommand;
 use SURFnet\SuAAS\SelfServiceBundle\Form\Type\CreateMollieType;
+use SURFnet\SuAAS\SelfServiceBundle\Form\Type\VerifyMollieTokenType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -93,16 +95,50 @@ class WizardController extends Controller
     public function smsAuthenticationAction()
     {
         $service = $this->get('suaas.service.mollie');
+
+        // call mollie to send sms if not done yet
+
         $token = $service->findTokenForUser(
             $this->get('security.context')->getToken()->getUser()
         );
+
+        $command = new VerifyMollieTokenCommand();
+        $form = $this->createForm(new VerifyMollieTokenType(), $command);
+
+        $form->handleRequest($this->getRequest());
+
+        if ($form->isValid()) {
+            // update token
+            // this->get('suaas.service.mollie')->verifyToken($token, $form->getData())
+
+            return $this->redirect($this->generateUrl('self_service_confirm'));
+        }
 
         return array(
             'user' => $this->get('security.context')->getToken()->getUser(),
             'tokenType' => 'SMS',
             'tokenExtended' => 'an SMS based one-time-password',
-            'token' => $token
-//            'form' => $form->createView()
+            'token' => $token,
+            'form' => $form->createView()
+        );
+    }
+
+    /**
+     * @Route("/confirm-token", name="self_service_confirm")
+     * @Template()
+     *
+     * @return array
+     */
+    public function smsConfirmAction()
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+        $service = $this->get('suaas.service.mollie');
+
+//        $service->sendActivationEmail($user);
+
+        return array(
+            'user' => $this->get('security.context')->getToken()->getUser(),
+            'token' => $service->findTokenForUser($user)
         );
     }
 
