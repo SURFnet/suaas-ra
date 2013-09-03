@@ -13,6 +13,11 @@
             </div>
             {{ wizardHeader(1) }}
             <h3>Welcome {{ user.displayName }}</h3>
+        {% if tokenWarning == true %}
+            <div class="alert alert-error">
+                You already have a token, please click <a href="{{ path("self_service_clear_tokens") }}">here</a> to remove that token.
+            </div>
+        {% else %}
             <div class="alert alert-info">
                 You have <strong>NOT</strong> registered an authentication token yet.
             </div>
@@ -23,6 +28,7 @@
                 Please select the token you wish to register from the options shown below:
             </p>
             {{ tokenThumbnails() }}
+        {% endif %}
         </div>
     </div>
 {% endblock %}

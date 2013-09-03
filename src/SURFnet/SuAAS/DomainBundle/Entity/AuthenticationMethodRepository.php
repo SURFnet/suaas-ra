@@ -24,4 +24,24 @@ class AuthenticationMethodRepository extends EntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function getTokenCountForUser(User $user)
+    {
+        return $this->createQueryBuilder('t')
+            ->select('COUNT(t.id)')
+            ->where('t.owner = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function removeForUser(User $user)
+    {
+        $this->createQueryBuilder('t')
+            ->delete()
+            ->where('t.owner = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->execute();
+    }
 }

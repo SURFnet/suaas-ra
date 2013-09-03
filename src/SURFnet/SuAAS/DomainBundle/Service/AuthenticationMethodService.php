@@ -12,4 +12,14 @@ class AuthenticationMethodService extends ORMService
     {
         return $this->getRepository()->getTokenOfTypeForUser($type, $user);
     }
+
+    public function removeTokensForUser(User $user)
+    {
+        return $this->getRepository()->removeForUser($user);
+    }
+
+    public function hasToken(User $user)
+    {
+        return (bool) $this->getRepository()->getTokenCountForUser($user);
+    }
 }
