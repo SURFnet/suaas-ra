@@ -38,7 +38,7 @@ class MailService
             ),
             'text/html'
         );
-        $message->addFrom('suaas.pilot@gmail.com');
+        $message->addFrom('suaas.pilot@gmail.com', 'SURFnet SuAAS');
         $message->addTo($command->recepient);
 
         $this->mailer->send($message);
