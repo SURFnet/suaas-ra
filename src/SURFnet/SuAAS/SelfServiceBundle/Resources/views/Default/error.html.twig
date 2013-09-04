@@ -1,0 +1,25 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}Step-up Authentication As A Service{% endblock title %}
+
+{% block content %}
+    <div class="row-fluid">
+        <div class="span8 offset2">
+            <div class="header clearfix">
+                <h1 class="pull-left">User Self Registration</h1>
+                {% image '@SURFnetSuAASSelfServiceBundle/Resources/public/images/SURFnet_logo.jpg' %}
+                    <img src="{{ asset_url }}" class="pull-right" alt="SURFnet Logo"/>
+                {% endimage %}
+            </div>
+            <div class="alert alert-error">
+                <p><strong>An Error has occurred</strong></p>
+                {% if message is defined %}
+                <p>
+                    {{ message }}
+                </p>
+                {% endif %}
+                Please click <a href="{{ path("landing") }}" title="Homepage">here to return to the homepage.
+            </div>
+        </div>
+    </div>
+{% endblock %}

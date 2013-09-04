@@ -39,4 +39,21 @@ class DefaultController extends Controller
 
         return $this->redirect($this->generateUrl('landing'));
     }
+
+    /**
+     * @Route("/error", name="error")
+     * @Template()
+     *
+     * @return array
+     */
+    public function errorAction()
+    {
+        $message = $this->get('session')->get('error_message', false);
+
+        if ($message) {
+            return array('message' => $message);
+        }
+
+        return array();
+    }
 }
