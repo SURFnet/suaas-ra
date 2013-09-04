@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new SURFnet\SuAAS\SelfServiceBundle\SURFnetSuAASSelfServiceBundle(),
             new SURFnet\SuAAS\DomainBundle\SURFnetSuAASDomainBundle(),
             new SURFnet\OneLoginBridgeBundle\SURFnetOneLoginBridgeBundle(),
+            new SURFnet\SuAAS\SecurityBundle\SURFnetSuAASSecurityBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

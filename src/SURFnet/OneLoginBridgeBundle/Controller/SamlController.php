@@ -5,6 +5,7 @@ namespace SURFnet\OneLoginBridgeBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -18,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SamlController extends Controller
 {
     /**
-     * @Route("/login")
+     * @Route("/login", name="saml_login")
      *
      * @return Response
      */
@@ -45,20 +46,20 @@ class SamlController extends Controller
      * @Route("/consume", name="saml_consume")
      *
      * @return Response
+     *
+     * @throws BadRequestHttpException
      */
     public function consumerAction()
     {
-        $samlResponseBody = $this->getRequest()->request->get('SAMLResponse', false);
-        if ($samlResponseBody === false) {
-            throw new BadRequestHttpException('No "SAMLResponse" found in the request');
+        $route = $this->get('session')->get('target', false);
+
+        if ($route === false) {
+            throw new BadRequestHttpException(
+                "Missing target session-parameter, did you get here through the"
+                . " correct page?"
+            );
         }
 
-        /** @var \SURFnet\SuAAS\DomainBundle\Entity\SAMLIdentity $samlResponse */
-        $samlResponse = $this->get('suaas.service.saml')->processResponse($samlResponseBody);
-
-        return $this->render(
-            'SURFnetOneLoginBridgeBundle:Default:index.html.twig',
-            array('identity' => $samlResponse)
-        );
+        return $this->redirect($this->generateUrl($route));
     }
 }

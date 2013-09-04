@@ -5,7 +5,6 @@ namespace SURFnet\SuAAS\DomainBundle\Service\SAML;
 use SURFnet\OneLoginBridgeBundle\SAML\Attribute\DisplayName;
 use SURFnet\OneLoginBridgeBundle\SAML\Attribute\Mail;
 use SURFnet\OneLoginBridgeBundle\SAML\Attribute\SchacHomeOrganisation;
-use SURFnet\OneLoginBridgeBundle\SAML\Attribute\Uid;
 use SURFnet\OneLoginBridgeBundle\Service\ResponseAdapter;
 use SURFnet\SuAAS\DomainBundle\Entity\SAMLIdentity;
 

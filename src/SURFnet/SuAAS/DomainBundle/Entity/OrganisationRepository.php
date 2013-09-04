@@ -14,4 +14,12 @@ use Doctrine\ORM\EntityRepository;
  */
 class OrganisationRepository extends EntityRepository
 {
+    public function findByName($name)
+    {
+        $this->createQueryBuilder('o')
+            ->where('o.name = :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

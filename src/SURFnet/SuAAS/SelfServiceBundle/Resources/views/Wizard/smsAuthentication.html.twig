@@ -1,0 +1,12 @@
+{% extends "SURFnetSuAASSelfServiceBundle:Wizard:linkToken.html.twig" %}
+
+{% block title %}{{ parent() }} - SMS{% endblock title %}
+
+{% block block_contents %}
+    <p>
+        Please enter the One-Time-Password sent to {{ token.readablePhoneNumber }} by SMS
+    </p>
+    <form action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" method="post" class="form-horizontal offset-top" {{ form_enctype(form) }}>
+        {{ form_rest(form) }}
+    </form>
+{% endblock %}

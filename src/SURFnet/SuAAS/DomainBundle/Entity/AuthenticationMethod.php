@@ -25,7 +25,7 @@ class AuthenticationMethod
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var User
@@ -33,32 +33,32 @@ class AuthenticationMethod
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
      */
-    private $owner;
+    protected $owner;
 
     /**
      * @var string
      *
      * sha1(base64_encode(openssl_random_pseudo_bytes(50)))
      *
-     * @ORM\Column(name="email_token", type="string", length=40, nullable=false)
+     * @ORM\Column(name="email_token", type="string", length=40, nullable=true)
      */
-    private $emailToken;
+    protected $emailToken;
 
     /**
      * @var string
      *
      * "The authors recommend a length of 8 characters from [0-9A-Ba-b]."
      *
-     * @ORM\Column(name="registration_code", type="string", length=8, nullable=false)
+     * @ORM\Column(name="registration_code", type="string", length=8, nullable=true)
      */
-    private $registrationCode;
+    protected $registrationCode;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="approved_at", type="datetime", nullable=false)
+     * @ORM\Column(name="approved_at", type="datetime", nullable=true)
      */
-    private $approvedAt;
+    protected $approvedAt;
 
     /**
      * @var User
@@ -66,26 +66,51 @@ class AuthenticationMethod
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="approved_by", referencedColumnName="id", nullable=true)
      */
-    private $approvedBy;
+    protected $approvedBy;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="revoked_at", type="datetime", nullable=true)
      */
-    private $revokedAt;
+    protected $revokedAt;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="requested_at", type="datetime", nullable=false)
+     * @ORM\Column(name="requested_at", type="datetime", nullable=true)
      */
-    private $requestedAt;
+    protected $requestedAt;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="last_used_at", type="datetime", nullable=false)
      */
-    private $lastUsedAt;
+    protected $lastUsedAt;
+
+    public function generateEmailToken()
+    {
+        $this->requestedAt = new \DateTime('now');
+        $token = sha1(base64_encode(openssl_random_pseudo_bytes(64)));
+
+        return $this->emailToken = $token;
+    }
+
+    public function isUserOwner(User $user)
+    {
+        return $this->owner->isEqualTo($user);
+    }
+
+    public function generateRegistrationCode()
+    {
+        $code = substr(sha1(base64_encode(openssl_random_pseudo_bytes(64))), 0, 8);
+
+        return $this->registrationCode = $code;
+    }
+
+    public function hasRegistrationCode()
+    {
+        return (bool) $this->registrationCode;
+    }
 }
