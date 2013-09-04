@@ -2,12 +2,14 @@
 
 namespace SURFnet\SuAAS\SelfServiceBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use SURFnet\SuAAS\DomainBundle\Command\CreateMollieCommand;
 use SURFnet\SuAAS\DomainBundle\Command\VerifyMollieTokenCommand;
 use SURFnet\SuAAS\SelfServiceBundle\Form\Type\CreateMollieType;
 use SURFnet\SuAAS\SelfServiceBundle\Form\Type\VerifyMollieTokenType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -133,13 +135,71 @@ class WizardController extends Controller
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $service = $this->get('suaas.service.mollie');
+        $token = $service->findTokenForUser($user);
 
-//        $service->sendActivationEmail($user);
+        $mail = $service->createActivationEmail($user, $token);
+        $this->get('suaas.mailer')->sendMail($mail);
 
         return array(
             'user' => $this->get('security.context')->getToken()->getUser(),
-            'token' => $service->findTokenForUser($user)
+            'token' => $token
         );
+    }
+
+    /**
+     * @Route("/registration-instruction", name="self_service_registration_instruction")
+     * @Method("GET")
+     * @Template()
+     *
+     * @return array
+     */
+    public function smsRegisterTokenAction()
+    {
+        $service = $this->get('suaas.service.mollie');
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $token = $service->findTokenForUser($user);
+        if ($token->hasRegistrationCode()) {
+            $this->get('session')->set('error_message', 'The token already has a registration code attached');
+            return $this->redirect($this->generateUrl('error'));
+        }
+
+        $mail = $service->createRegistrationMail($user, $token);
+        // quick hack
+        $code = $mail->parameters['code'];
+        $this->get('suaas.mailer')->sendMail($mail);
+
+        return array(
+            'user' => $user,
+            'code' => $code
+        );
+    }
+
+    /**
+     * @Route("/registration-code/", name="self_service_registration")
+     * @Method("GET")
+     * @Template()
+     *
+     * @return array
+     */
+    public function confirmTokenAction()
+    {
+        $registrationCode = $this->getRequest()->get('c', false);
+        $userHash = $this->getRequest()->get('n', false);
+
+        if ($registrationCode === false || $userHash === false) {
+            return new BadRequestHttpException("Invalid Request");
+        }
+
+        $user = $this->get('suaas.service.user')->loadUserByUsername($userHash);
+        $service = $this->get('suaas.service.authentication_method');
+
+        if (!$service->confirmRegistration($user, $registrationCode)) {
+            $this->get('session')->set('error_message', 'The registration URL you tried to use is invalid');
+            return $this->redirect($this->generateUrl('error'));
+        }
+
+        return $this->redirect($this->generateUrl('self_service_registration_instruction'));
     }
 
     /**

@@ -88,4 +88,29 @@ class AuthenticationMethod
      * @ORM\Column(name="last_used_at", type="datetime", nullable=false)
      */
     protected $lastUsedAt;
+
+    public function generateEmailToken()
+    {
+        $this->requestedAt = new \DateTime('now');
+        $token = sha1(base64_encode(openssl_random_pseudo_bytes(64)));
+
+        return $this->emailToken = $token;
+    }
+
+    public function isUserOwner(User $user)
+    {
+        return $this->owner->isEqualTo($user);
+    }
+
+    public function generateRegistrationCode()
+    {
+        $code = substr(sha1(base64_encode(openssl_random_pseudo_bytes(64))), 0, 8);
+
+        return $this->registrationCode = $code;
+    }
+
+    public function hasRegistrationCode()
+    {
+        return (bool) $this->registrationCode;
+    }
 }

@@ -4,19 +4,24 @@
 
 {% block content %}
     <div class="row-fluid">
-        <div class="span6 offset3">
-            <h1>SuAAS-RA</h1>
+        <div class="span8 offset2">
+            <div class="header clearfix">
+                <h1 class="pull-left">User Self Registration</h1>
+                {% image '@SURFnetSuAASSelfServiceBundle/Resources/public/images/SURFnet_logo.jpg' %}
+                    <img src="{{ asset_url }}" class="pull-right" alt="SURFnet Logo"/>
+                {% endimage %}
+            </div>
             <div class="alert alert-info">
                 <p><strong>Welcome at SuAAS-RA</strong></p>
                 <p>
-                    ....additional information....
+                    [....additional information/instructions placeholder....]
                 </p>
                 <p>
                     Please select one of the two workflows to get started.
                 </p>
             </div>
             <div>
-                <a class="btn btn-info" href="#" title="Registration Authority">Registration Authority</a>
+                <button disabled="disabled" class="btn btn-info disabled" title="Registration Authority">Registration Authority</button>
                 <a class="btn btn-primary pull-right" href="{{ path('self_service_start') }}" title="Self Registration">Self Registration</a>
             </div>
         </div>

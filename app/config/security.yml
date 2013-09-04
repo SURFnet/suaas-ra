@@ -27,6 +27,7 @@ security:
 #        - { path: ^/demo/secured/hello/admin/, roles: ROLE_ADMIN }
 #        - { path: ^/saml, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/self-service/start, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/self-service/registration-code/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/self-service, roles: ROLE_USER }
 #        - { path: ^/management, roles: ROLE_ADMIN }
         - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }

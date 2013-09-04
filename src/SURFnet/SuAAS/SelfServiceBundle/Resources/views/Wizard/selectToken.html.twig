@@ -15,6 +15,7 @@
             <h3>Welcome {{ user.displayName }}</h3>
         {% if tokenWarning == true %}
             <div class="alert alert-error">
+                <p><strong>TESTING PURPOSE ONLY</strong></p>
                 You already have a token, please click <a href="{{ path("self_service_clear_tokens") }}">here</a> to remove that token.
             </div>
         {% else %}

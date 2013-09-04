@@ -44,4 +44,13 @@ class AuthenticationMethodRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function findByEmailCode($code)
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.emailToken = :code')
+            ->setParameter('code', $code)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
