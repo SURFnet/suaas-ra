@@ -30,7 +30,7 @@ assetic:
     node:           /usr/local/bin/node
     debug:          %kernel.debug%
     use_controller: false
-    bundles:        [MopaBootstrapBundle]
+    bundles:        [MopaBootstrapBundle, SURFnetSuAASSelfServiceBundle]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
@@ -68,7 +68,9 @@ swiftmailer:
     host:      %mailer_host%
     username:  %mailer_user%
     password:  %mailer_password%
-    spool:     { type: memory }
+    port: 465
+    encryption: ssl
+    sender_address: suaas.pilot@gmail.com
 
 sur_fnet_one_login_bridge:
     saml_settings:

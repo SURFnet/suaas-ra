@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "8f9bf5f0745e8b945cdcb26db69f0eaf",
+    "hash": "adc26079ce18f050c28f633192348e8a",
     "packages": [
         {
             "name": "doctrine/common",
@@ -386,6 +386,54 @@
             "time": "2013-05-11 07:51:12"
         },
         {
+            "name": "fortawesome/font-awesome",
+            "version": "v3.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FortAwesome/Font-Awesome.git",
+                "reference": "b1a8ad47303509e70e56079396fad2afadfd96d5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/b1a8ad47303509e70e56079396fad2afadfd96d5",
+                "reference": "b1a8ad47303509e70e56079396fad2afadfd96d5",
+                "shasum": ""
+            },
+            "require-dev": {
+                "jekyll": "1.0.2",
+                "lessc": "1.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.2.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "OFL-1.1",
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dave Gandy",
+                    "email": "dave@fontawesome.io",
+                    "homepage": "http://twitter.com/byscuits",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The iconic font designed for Bootstrap",
+            "homepage": "http://fontawesome.io/",
+            "keywords": [
+                "FontAwesome",
+                "awesome",
+                "bootstrap",
+                "font",
+                "icon"
+            ],
+            "time": "2013-06-17 15:31:59"
+        },
+        {
             "name": "incenteev/composer-parameter-handler",
             "version": "v2.0.0",
             "target-dir": "Incenteev/ParameterHandler",
@@ -625,12 +673,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phiamo/MopaBootstrapBundle.git",
-                "reference": "1b747d7eacbcd28bfeb4cec22db739abc31b116d"
+                "reference": "d5f2fa6996424110e7531de23293321400c7e102"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phiamo/MopaBootstrapBundle/zipball/1b747d7eacbcd28bfeb4cec22db739abc31b116d",
-                "reference": "1b747d7eacbcd28bfeb4cec22db739abc31b116d",
+                "url": "https://api.github.com/repos/phiamo/MopaBootstrapBundle/zipball/d5f2fa6996424110e7531de23293321400c7e102",
+                "reference": "d5f2fa6996424110e7531de23293321400c7e102",
                 "shasum": ""
             },
             "require": {
@@ -679,7 +727,7 @@
                 "form",
                 "template"
             ],
-            "time": "2013-08-25 18:48:00"
+            "time": "2013-08-30 12:36:08"
         },
         {
             "name": "mopa/composer-bridge",
@@ -933,16 +981,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v5.0.1",
+            "version": "v5.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "619aceb969f1e8759edc28fb22f9b64b3bddbc1e"
+                "reference": "f3917ecef35a4e4d98b303eb9fee463bc983f379"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/619aceb969f1e8759edc28fb22f9b64b3bddbc1e",
-                "reference": "619aceb969f1e8759edc28fb22f9b64b3bddbc1e",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/f3917ecef35a4e4d98b303eb9fee463bc983f379",
+                "reference": "f3917ecef35a4e4d98b303eb9fee463bc983f379",
                 "shasum": ""
             },
             "require": {
@@ -978,7 +1026,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2013-06-17 13:32:32"
+            "time": "2013-08-30 12:35:21"
         },
         {
             "name": "symfony/assetic-bundle",

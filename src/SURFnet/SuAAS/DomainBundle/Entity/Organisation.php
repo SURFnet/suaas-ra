@@ -37,4 +37,27 @@ class Organisation
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
      */
     private $createdAt;
+
+    public function create($name)
+    {
+        if ($this->id) {
+            throw new \LogicException(
+                "Cannot create an Organisation when that Organisation already has an ID"
+            );
+        }
+
+        if (!is_string($name)) {
+            throw new \InvalidArgumentException(
+                '$name must be a string'
+            );
+        }
+
+        $this->name = $name;
+        $this->createdAt = new \DateTime('now');
+    }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

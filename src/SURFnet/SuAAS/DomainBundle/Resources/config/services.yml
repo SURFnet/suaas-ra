@@ -1,8 +1,17 @@
 parameters:
+    suaas.service.orm.class:                        SURFnet\SuAAS\DomainBundle\Service\OrmSerivce
     suaas.service.saml.class:                       SURFnet\SuAAS\DomainBundle\Service\SAMLService
-    suaas.service.saml.identity_resolver.class:    SURFnet\SuAAS\DomainBundle\Service\SAML\IdentityResolver
+    suaas.service.saml.identity_resolver.class:     SURFnet\SuAAS\DomainBundle\Service\SAML\IdentityResolver
+    suaas.service.user.class:                       SURFnet\SuAAS\DomainBundle\Service\UserService
+    suaas.service.authentication_method.class:      SURFnet\SuAAS\DomainBundle\Service\AuthenticationMethodService
+    suaas.service.mollie.class:                     SURFnet\SuAAS\DomainBundle\Service\MollieService
 
 services:
+    suaas.service.orm:
+        class: %suaas.service.orm.class%
+        arguments:
+            - @doctrine
+
     suaas.service.saml:
         class: %suaas.service.saml.class%
         arguments:
@@ -13,3 +22,15 @@ services:
         class: %suaas.service.saml.identity_resolver.class%
         arguments:
             - @surfnet.saml.attributes
+
+    suaas.service.user:
+        class: %suaas.service.user.class%
+        parent: suaas.service.orm
+
+    suaas.service.authentication_method:
+        class: %suaas.service.authentication_method.class%
+        parent: suaas.service.orm
+
+    suaas.service.mollie:
+        class: %suaas.service.mollie.class%
+        parent: suaas.service.authentication_method

@@ -1,0 +1,35 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}SuAAS - Self Service - Select Token{% endblock title %}
+
+{% block content %}
+    <div class="row-fluid">
+        <div class="span8 offset2">
+            <div class="header clearfix">
+                <h1 class="pull-left">User Self Registration</h1>
+                {% image '@SURFnetSuAASSelfServiceBundle/Resources/public/images/SURFnet_logo.jpg' %}
+                    <img src="{{ asset_url }}" class="pull-right" alt="SURFnet Logo"/>
+                {% endimage %}
+            </div>
+            {{ wizardHeader(1) }}
+            <h3>Welcome {{ user.displayName }}</h3>
+        {% if tokenWarning == true %}
+            <div class="alert alert-error">
+                <p><strong>TESTING PURPOSE ONLY</strong></p>
+                You already have a token, please click <a href="{{ path("self_service_clear_tokens") }}">here</a> to remove that token.
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                You have <strong>NOT</strong> registered an authentication token yet.
+            </div>
+            <p>
+                This wizard will guide you through the user self registration process and allows you to link a new security token to your identity
+            </p>
+            <p>
+                Please select the token you wish to register from the options shown below:
+            </p>
+            {{ tokenThumbnails() }}
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

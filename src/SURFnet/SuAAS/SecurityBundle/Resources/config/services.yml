@@ -1,0 +1,17 @@
+parameters:
+    suaas_security.authentication.provider.class:       SURFnet\SuAAS\SecurityBundle\Security\Authentication\Provider\SAMLProvider
+    suaas_security.authentication.listener.class:       SURFnet\SuAAS\SecurityBundle\Security\Firewall\SAMLListener
+
+services:
+    suaas_security.authentication.provider:
+        class: %suaas_security.authentication.provider.class%
+        arguments:
+            - @suaas.service.user
+
+    suaas_security.authentication.listener:
+        class: %suaas_security.authentication.listener.class%
+        arguments:
+            - @security.context
+            - @security.authentication.manager
+            - @suaas.service.saml
+            - @logger

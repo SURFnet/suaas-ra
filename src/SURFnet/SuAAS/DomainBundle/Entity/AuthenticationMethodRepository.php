@@ -15,4 +15,42 @@ use Doctrine\ORM\EntityRepository;
  */
 class AuthenticationMethodRepository extends EntityRepository
 {
+    public function getTokenOfTypeForUser($type, User $user)
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.owner = :user')
+            ->andWhere('t INSTANCE OF SURFnet\SuAAS\DomainBundle\Entity\\' . $type)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function getTokenCountForUser(User $user)
+    {
+        return $this->createQueryBuilder('t')
+            ->select('COUNT(t.id)')
+            ->where('t.owner = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function removeForUser(User $user)
+    {
+        $this->createQueryBuilder('t')
+            ->delete()
+            ->where('t.owner = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findByEmailCode($code)
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.emailToken = :code')
+            ->setParameter('code', $code)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

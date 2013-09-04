@@ -1,0 +1,19 @@
+{% extends "SURFnetSuAASSelfServiceBundle:Wizard:linkToken.html.twig" %}
+
+{% block title %}{{ parent() }} - SMS{% endblock title %}
+
+{% block block_contents %}
+    <p>
+        To link the SMS based one-time-password, please follow the next steps
+    </p>
+    <ol>
+        <li>Please ensure your mobile phone has a signal and can receive SMS</li>
+        <li>Enter your phone-number in the form below</li>
+        <li>When you click "Proceed", you will receive an SMS. On the next page, please enter the One-Time-Password.</li>
+    </ol>
+    <p>
+        <form action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" method="post" class="form-horizontal offset-top" {{ form_enctype(form) }}>
+            {{ form_rest(form) }}
+        </form>
+    </p>
+{% endblock %}

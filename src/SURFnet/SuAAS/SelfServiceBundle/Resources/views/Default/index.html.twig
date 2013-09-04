@@ -1,11 +1,28 @@
 {% extends '::base.html.twig' %}
 
+{% block title %}Step-up Authentication As A Service{% endblock title %}
+
 {% block content %}
     <div class="row-fluid">
-        <div class="span6 offset3">
-            <h1>Hallo!</h1>
-            <div class="well">
-                Dit is een test-applicatie. Er is nu nog niets te zien.
+        <div class="span8 offset2">
+            <div class="header clearfix">
+                <h1 class="pull-left">User Self Registration</h1>
+                {% image '@SURFnetSuAASSelfServiceBundle/Resources/public/images/SURFnet_logo.jpg' %}
+                    <img src="{{ asset_url }}" class="pull-right" alt="SURFnet Logo"/>
+                {% endimage %}
+            </div>
+            <div class="alert alert-info">
+                <p><strong>Welcome at SuAAS-RA</strong></p>
+                <p>
+                    [....additional information/instructions placeholder....]
+                </p>
+                <p>
+                    Please select one of the two workflows to get started.
+                </p>
+            </div>
+            <div>
+                <button disabled="disabled" class="btn btn-info disabled" title="Registration Authority">Registration Authority</button>
+                <a class="btn btn-primary pull-right" href="{{ path('self_service_start') }}" title="Self Registration">Self Registration</a>
             </div>
         </div>
     </div>

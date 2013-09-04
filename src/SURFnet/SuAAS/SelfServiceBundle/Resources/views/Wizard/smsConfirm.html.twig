@@ -1,0 +1,29 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}SuAAS - Self Service - Select Token{% endblock title %}
+
+{% block content %}
+    <div class="row-fluid">
+        <div class="span8 offset2">
+            <div class="header clearfix">
+                <h1 class="pull-left">User Self Registration</h1>
+                {% image '@SURFnetSuAASSelfServiceBundle/Resources/public/images/SURFnet_logo.jpg' %}
+                    <img src="{{ asset_url }}" class="pull-right" alt="SURFnet Logo"/>
+                {% endimage %}
+            </div>
+            {{ wizardHeader(3) }}
+            <div class="row-fluid">
+                <div class="span8">
+                    <div class="alert alert-success">
+                        The SMS One-Time-Password for {{ token.readablePhoneNumber }} has been added to your account <strong>{{ user.email }}</strong>.<br />
+                        <br />
+                        Please check your email for further instructions on how to activate your token.
+                    </div>
+                </div>
+                <div class="span4">
+                    {{ tokenThumbnails(false, {1:'SMS'}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
