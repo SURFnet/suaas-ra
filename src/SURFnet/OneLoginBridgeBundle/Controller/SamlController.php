@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SamlController extends Controller
 {
     /**
-     * @Route("/login", name="saml_login")
+     * @Route("/redirect", name="saml_login")
      *
      * @return Response
      */
@@ -51,7 +51,8 @@ class SamlController extends Controller
      */
     public function consumerAction()
     {
-        $route = $this->get('session')->get('target', false);
+        $session = $this->get('session');
+        $route = $session->get('target', false);
 
         if ($route === false) {
             throw new BadRequestHttpException(
@@ -60,6 +61,12 @@ class SamlController extends Controller
             );
         }
 
-        return $this->redirect($this->generateUrl($route));
+        $query = $session->get('target_query', false);
+        if ($query !== false) {
+            $session->remove('target_query');
+        }
+        $session->remove('target');
+
+        return $this->redirect($this->generateUrl($route) . ($query ? '?' . $query : ''));
     }
 }

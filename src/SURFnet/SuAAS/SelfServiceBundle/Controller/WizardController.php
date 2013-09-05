@@ -178,7 +178,6 @@ class WizardController extends Controller
     /**
      * @Route("/registration-code/", name="self_service_registration")
      * @Method("GET")
-     * @Template()
      *
      * @return array
      */
@@ -188,7 +187,7 @@ class WizardController extends Controller
         $userHash = $this->getRequest()->get('n', false);
 
         if ($registrationCode === false || $userHash === false) {
-            return new BadRequestHttpException("Invalid Request");
+            throw new BadRequestHttpException("Invalid Request");
         }
 
         $user = $this->get('suaas.service.user')->loadUserByUsername($userHash);

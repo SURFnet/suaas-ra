@@ -15,20 +15,22 @@ security:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        self_registration:
-            pattern:  ^/(self\-service|saml)
-            saml: true
+        exceptions:
+            pattern: ^/(login|start|saml/(redirect|metadata))
             anonymous: ~
+
+        self_registration:
+            pattern:  ^/
+            saml: true
+            provider: suaas
+            form_login:
+                login_path: /start
+                use_referer: true
             logout:
-                path:   logout
-                target: /
+                path:   /logout
+                target: /start
 
     access_control:
-#        - { path: ^/demo/secured/hello/admin/, roles: ROLE_ADMIN }
-#        - { path: ^/saml, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/self-service/start, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/self-service/registration-code/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/self-service, roles: ROLE_USER }
-#        - { path: ^/management, roles: ROLE_ADMIN }
-        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/(login|start), roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/saml/(redirect|metadata), roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
