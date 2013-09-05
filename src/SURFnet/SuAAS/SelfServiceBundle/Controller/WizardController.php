@@ -180,6 +180,8 @@ class WizardController extends Controller
      * @Method("GET")
      *
      * @return array
+     *
+     * @throws BadRequestHttpException
      */
     public function confirmTokenAction()
     {
