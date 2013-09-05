@@ -17,27 +17,56 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/", name="landing")
+     * @Route("/")
+     */
+    public function kickstartAction()
+    {
+        return $this->redirect($this->generateUrl('landing'));
+    }
+
+    /**
+     * @Route("/start", name="landing")
      * @Template()
      *
      * @return array
      */
     public function indexAction()
     {
+        $session = $this->get('session');
+        $targetURL = $session->get('_security.self_registration.target_path', false);
+        $targetPath = @parse_url($targetURL, PHP_URL_PATH);
+        $targetParams = @parse_url($targetURL, PHP_URL_QUERY);
+
+        if ($targetPath !== false && strpos($targetPath, $this->generateUrl('self_service_registration')) === 0) {
+            $this->get('session')->set('target', 'self_service_registration');
+            $this->get('session')->set('target_query', $targetParams);
+
+            return $this->redirect($this->generateUrl('saml_login'));
+        }
+
         return array();
     }
 
     /**
-     * @Route("/logout")
-     * @Template()
+     * @Route("/login", name="login")
      *
      * @return array
      */
-    public function logoutAction()
+    public function loginAction()
     {
-        $this->get('session')->invalidate();
+        $type = $this->getRequest()->get('flow', false);
+        $session = $this->get('session');
 
-        return $this->redirect($this->generateUrl('landing'));
+        if ($type === false) {
+            $session->set('error_message', 'Cannot determine which flow to start');
+            $this->redirect($this->generateUrl('error'));
+        }
+
+        if ($type === 'self') {
+            $this->get('session')->set('target', 'self_service_selecttoken');
+        }
+
+        return $this->redirect($this->generateUrl('saml_login'));
     }
 
     /**
@@ -48,9 +77,11 @@ class DefaultController extends Controller
      */
     public function errorAction()
     {
-        $message = $this->get('session')->get('error_message', false);
+        $session = $this->get('session');
+        $message = $session->get('error_message', false);
 
         if ($message) {
+            $session->remove('error_message');
             return array('message' => $message);
         }
 

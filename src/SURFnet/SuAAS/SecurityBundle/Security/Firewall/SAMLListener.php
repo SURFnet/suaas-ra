@@ -72,6 +72,12 @@ class SamlListener implements ListenerInterface
         // ensure we have a posted SAML Authn Request
         $samlResponseBody = $request->get('SAMLResponse', false);
         if (!($request->isMethod('POST') && $samlResponseBody !== false)) {
+//            if ($this->securityContext->getToken() === null) {
+//                $response = new Response();
+//                $response->setStatusCode(403);
+//                $event->setResponse($response);
+//            }
+
             return;
         }
 

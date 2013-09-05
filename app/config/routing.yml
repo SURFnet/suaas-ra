@@ -11,3 +11,6 @@ surfnet_onelogin_saml:
     resource: "@SURFnetOneLoginBridgeBundle/Controller/"
     type:     annotation
     prefix:   /
+
+logout:
+    path: /logout
