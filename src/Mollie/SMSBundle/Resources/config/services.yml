@@ -1,0 +1,17 @@
+parameters:
+    mollie_sms.service.class: Mollie\SMSBundle\SMS\Service
+    mollie_sms.message.class: Mollie\SMSBundle\SMS\Message
+
+    guzzle.client.class:        Guzzle\Http\Client
+
+services:
+    mollie_sms.client:
+        class: %guzzle.client.class%
+
+    mollie_sms.service:
+        class: %mollie_sms.service.class%
+        arguments:
+            - @mollie_sms.client
+            - %mollie_sms.credentials.username%
+            - %mollie_sms.credentials.password%
+            - %mollie_sms.credentials.originator%
