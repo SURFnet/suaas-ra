@@ -19,3 +19,8 @@ parameters:
     saml_issuer_name:
     saml_name_identifier_format:
     saml_certificate:
+
+    mollie_url:
+    mollie_username:
+    mollie_password:
+    mollie_originator:
