@@ -53,4 +53,52 @@ class AuthenticationMethodRepository extends EntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function hasPendingMollieOTP(Mollie $token)
+    {
+        $dql = "
+            SELECT
+                COUNT(o.id) cnt
+            FROM
+                SURFnetSuAASDomainBundle:MollieOTP o
+            WHERE
+            (   o.mollieToken = :token
+            AND o.confirmedAt IS NULL
+            )
+        ";
+
+        $result = $this
+            ->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter('token', $token)
+            ->getSingleScalarResult();
+
+        return (bool) $result;
+    }
+
+    public function findMollieOTP(Mollie $token, $otp)
+    {
+        $dql = "
+            SELECT
+                o
+            FROM
+                SURFnetSuAASDomainBundle:MollieOTP o
+            WHERE
+            (   o.mollieToken = :token
+            AND o.confirmedAt IS NULL
+            AND o.otp = :otp
+            )
+        ";
+
+        return $this
+            ->getEntityManager()
+            ->createQuery($dql)
+            ->setParameters(
+                array(
+                    'token' => $token,
+                    'otp' => strtolower($otp) // yes, case-insensitive was requested
+                )
+            )
+            ->getOneOrNullResult();
+    }
 }

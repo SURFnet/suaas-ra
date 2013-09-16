@@ -9,6 +9,7 @@ use SURFnet\SuAAS\DomainBundle\Command\VerifyMollieTokenCommand;
 use SURFnet\SuAAS\SelfServiceBundle\Form\Type\CreateMollieType;
 use SURFnet\SuAAS\SelfServiceBundle\Form\Type\VerifyMollieTokenType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -66,6 +67,7 @@ class WizardController extends Controller
 
             $service->createMollieToken($command);
 
+            $this->get('session')->set('redirect_after_sms', 'self_service_link_sms_verify');
             return $this->redirect($this->generateUrl('self_service_link_sms_auth'));
         }
 
@@ -79,6 +81,31 @@ class WizardController extends Controller
 
     /**
      * @Route("/link-token/sms/authentication", name="self_service_link_sms_auth")
+     * @Method("GET")
+     */
+    public function sendSmsAction()
+    {
+        $redirectAfter = $this->get('session')->get('redirect_after_sms', false);
+
+        if ($redirectAfter === false) {
+            return $this->error('You tried to access a page that could not be accessed');
+        }
+        $this->get('session')->remove('redirect_after_sms');
+
+        $service = $this->get('suaas.service.mollie');
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        if ($service->hasPendingOTP($user)) {
+            return $this->error('You still have a pending token, please log out and start again');
+        } else {
+            $service->sendOTP($user);
+        }
+
+        return $this->redirect($this->generateUrl($redirectAfter));
+    }
+
+    /**
+     * @Route("/link-token/sms/verification", name="self_service_link_sms_verify")
      * @Template("SURFnetSuAASSelfServiceBundle:Wizard:smsAuthentication.html.twig")
      *
      * @return array
@@ -86,27 +113,31 @@ class WizardController extends Controller
     public function smsAuthenticationAction()
     {
         $service = $this->get('suaas.service.mollie');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $token = $service->findTokenForUser($user);
 
-        // call mollie to send sms if not done yet
+        if (!$service->hasPendingOTP($user)) {
+            throw new BadRequestHttpException(
+                "Invalid request - no pending sms OTP."
+            );
+        }
 
-        $token = $service->findTokenForUser(
-            $this->get('security.context')->getToken()->getUser()
+        $form = $this->createForm(
+            new VerifyMollieTokenType(),
+            new VerifyMollieTokenCommand()
         );
 
-        $command = new VerifyMollieTokenCommand();
-        $form = $this->createForm(new VerifyMollieTokenType(), $command);
-
         $form->handleRequest($this->getRequest());
-
         if ($form->isValid()) {
-            // update token
-            // this->get('suaas.service.mollie')->verifyToken($token, $form->getData())
+            if ($service->verifyToken($token, $form->getData())) {
+                return $this->redirect($this->generateUrl('self_service_confirm'));
+            }
 
-            return $this->redirect($this->generateUrl('self_service_confirm'));
+            $form->get('password')->addError(new FormError('Invalid Password'));
         }
 
         return array(
-            'user' => $this->get('security.context')->getToken()->getUser(),
+            'user' => $user,
             'tokenType' => 'SMS',
             'tokenExtended' => 'an SMS based one-time-password',
             'token' => $token,
@@ -149,8 +180,7 @@ class WizardController extends Controller
 
         $token = $service->findTokenForUser($user);
         if ($token->hasRegistrationCode()) {
-            $this->get('session')->set('error_message', 'The token already has a registration code attached');
-            return $this->redirect($this->generateUrl('error'));
+            return $this->error('The token already has a registration code attached');
         }
 
         $mail = $service->createRegistrationMail($user, $token);
@@ -185,8 +215,7 @@ class WizardController extends Controller
         $service = $this->get('suaas.service.authentication_method');
 
         if (!$service->confirmRegistration($user, $registrationCode)) {
-            $this->get('session')->set('error_message', 'The registration URL you tried to use is invalid');
-            return $this->redirect($this->generateUrl('error'));
+            return $this->error('The registration URL you tried to use is invalid');
         }
 
         return $this->redirect($this->generateUrl('self_service_registration_instruction'));
@@ -210,5 +239,11 @@ class WizardController extends Controller
             );
 
         return $this->redirect($this->generateUrl($targetRoute));
+    }
+
+    private function error($message)
+    {
+        $this->get('session')->set('error_message', $message);
+        return $this->redirect($this->generateUrl('error'));
     }
 }

@@ -34,3 +34,5 @@ services:
     suaas.service.mollie:
         class: %suaas.service.mollie.class%
         parent: suaas.service.authentication_method
+        calls:
+            - [setSmsService, ["@mollie_sms.service"]]

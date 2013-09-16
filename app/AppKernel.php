@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new SURFnet\SuAAS\DomainBundle\SURFnetSuAASDomainBundle(),
             new SURFnet\OneLoginBridgeBundle\SURFnetOneLoginBridgeBundle(),
             new SURFnet\SuAAS\SecurityBundle\SURFnetSuAASSecurityBundle(),
+            new Mollie\SMSBundle\MollieSMSBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
