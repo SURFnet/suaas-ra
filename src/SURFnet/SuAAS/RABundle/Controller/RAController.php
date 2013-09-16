@@ -20,8 +20,10 @@ class RAController extends Controller
      * @Route("/user-overview", name="management_user_overview")
      * @Template()
      */
-    public function userOverviewAction()
+    public function registrationAction()
     {
-        return array();
+        return array(
+            'items' => $this->get('suaas.service.authentication_method')->getTokensToVet()
+        );
     }
 }

@@ -38,4 +38,14 @@ class AuthenticationMethodService extends ORMService
 
         return true;
     }
+
+    public function getTokensToVet()
+    {
+        /** @var \Doctrine\Common\Collections\ArrayCollection $tokens */
+        $tokens = $this->getRepository()->findUnvettedTokens();
+
+        return $tokens->map(function ($token) {
+            return $token->getRegistrationView();
+        });
+    }
 }

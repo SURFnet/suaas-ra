@@ -1,0 +1,28 @@
+{% extends "SURFnetSuAASRABundle:RA:base.html.twig" %}
+
+{% block title %}{{ parent() }} - Registration{% endblock title %}
+
+{% block page_content %}
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Requested At</th>
+            <th>Display Name</th>
+            <th>Email</th>
+            <th>TokenType</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for token in items %}
+        <tr>
+            <td>{{ token.requestedAt|date("Y-m-d") }}</td>
+            <td>{{ token.name }}</td>
+            <td>{{ token.email }}</td>
+            <td>{{ token.tokenType }}</td>
+            <td><i class="icon-ok icon-large text-success"></i> <i class="icon-trash icon-large text-error"></i></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

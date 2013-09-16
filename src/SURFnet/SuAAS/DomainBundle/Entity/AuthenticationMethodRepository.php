@@ -2,6 +2,7 @@
 
 namespace SURFnet\SuAAS\DomainBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -100,5 +101,18 @@ class AuthenticationMethodRepository extends EntityRepository
                 )
             )
             ->getOneOrNullResult();
+    }
+
+    public function findUnvettedTokens()
+    {
+        $results = $this
+            ->createQueryBuilder('t')
+            ->where('t.approvedAt IS NULL')
+            ->andWhere('t.requestedAt IS NOT NULL')
+            ->andWhere('t.registrationCode IS NOT NULL')
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($results);
     }
 }

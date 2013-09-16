@@ -3,6 +3,7 @@
 namespace SURFnet\SuAAS\DomainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use SURFnet\SuAAS\DomainBundle\Entity\View\RegistrationView;
 
 /**
  * AuthenticationMethod
@@ -16,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
  */
-class AuthenticationMethod
+abstract class AuthenticationMethod
 {
     /**
      * @var integer
@@ -89,9 +90,10 @@ class AuthenticationMethod
      */
     protected $lastUsedAt;
 
+    abstract protected function getType();
+
     public function generateEmailToken()
     {
-        $this->requestedAt = new \DateTime('now');
         $token = sha1(base64_encode(openssl_random_pseudo_bytes(64)));
 
         return $this->emailToken = $token;
@@ -105,6 +107,7 @@ class AuthenticationMethod
     public function generateRegistrationCode()
     {
         $code = substr(sha1(base64_encode(openssl_random_pseudo_bytes(64))), 0, 8);
+        $this->requestedAt = new \DateTime('now');
 
         return $this->registrationCode = $code;
     }
@@ -112,5 +115,17 @@ class AuthenticationMethod
     public function hasRegistrationCode()
     {
         return (bool) $this->registrationCode;
+    }
+
+    public function getRegistrationView()
+    {
+        return new RegistrationView(
+            array(
+                'requestedAt' => $this->requestedAt,
+                'name' => $this->owner->getDisplayName(),
+                'email' => $this->owner->getEmail(),
+                'tokenType' => $this->getType()
+            )
+        );
     }
 }

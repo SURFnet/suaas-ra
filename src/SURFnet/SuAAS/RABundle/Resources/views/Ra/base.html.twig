@@ -1,6 +1,6 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}SuAAS - Management{% endblock title %}
+{% block title %}{{ parent() }} - Management{% endblock title %}
 
 {% block content %}
     <div class="row-fluid">
@@ -10,6 +10,19 @@
                 {% image '@SURFnetSuAASSelfServiceBundle/Resources/public/images/SURFnet_logo.jpg' %}
                     <img src="{{ asset_url }}" class="pull-right" alt="SURFnet Logo"/>
                 {% endimage %}
+            </div>
+            <div>
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="{{ path('management_user_overview') }}">Registration</a>
+                    </li>
+                    <li class="disabled">
+                        <a href="#" title="Disabled in the Pilot">De-Registration</a>
+                    </li>
+                    <li class="disabled">
+                        <a href="#" title="Disabled in the Pilot">Settings</a>
+                    </li>
+                </ul>
             </div>
             {% block page_content %}{% endblock page_content %}
         </div>
