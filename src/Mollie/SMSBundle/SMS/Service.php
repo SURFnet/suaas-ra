@@ -30,7 +30,7 @@ class Service
             ->set('username', $this->username)
             ->set('password', $this->password)
             ->set('originator', $this->originator)
-            ->set('recipients', array($message->recipient))
+            ->set('recipients', array('316' . $message->recipient))
             ->set('message', (string) $message->body);
 
         $response = $request->send();
