@@ -36,7 +36,7 @@ class Service
         $response = $request->send();
 
         $xml = $response->xml();
-var_dump($xml);
+
         // handling should be improved 10-fold
         // see https://www.mollie.nl/support/documentatie/sms-diensten/sms/http/
         if (reset($xml->item->success) !== 'true') {
