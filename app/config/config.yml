@@ -30,8 +30,7 @@ assetic:
     node:           /usr/local/bin/node
     debug:          %kernel.debug%
     use_controller: false
-    bundles:        [MopaBootstrapBundle, SURFnetSuAASSelfServiceBundle]
-    #java: /usr/bin/java
+    bundles:        [MopaBootstrapBundle, SURFnetSuAASSelfServiceBundle, SURFnetSuAASRABundle]
     filters:
         cssrewrite: ~
         less:
