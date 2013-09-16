@@ -23,17 +23,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class WizardController extends Controller
 {
     /**
-     * @Route("/start", name="self_service_start")
-     *
-     * @return array
-     */
-    public function indexAction()
-    {
-        $this->get('session')->set('target', 'self_service_selecttoken');
-        return $this->redirect($this->generateUrl('saml_login'));
-    }
-
-    /**
      * @Route("/select-token", name="self_service_selecttoken")
      * @Template()
      *
