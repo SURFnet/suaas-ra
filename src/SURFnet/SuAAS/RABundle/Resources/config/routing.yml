@@ -1,3 +1,0 @@
-sur_fnet_su_aasra_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: SURFnetSuAASRABundle:Default:index }
