@@ -6,23 +6,40 @@
     <div class="row-fluid">
         <div class="span8 offset2">
             <div class="header clearfix">
-                <h1 class="pull-left">User Self Registration</h1>
+                <h1 class="pull-left">SuAAS-RA Pilot</h1>
                 {% image '@SURFnetSuAASSelfServiceBundle/Resources/public/images/SURFnet_logo.jpg' %}
                     <img src="{{ asset_url }}" class="pull-right" alt="SURFnet Logo"/>
                 {% endimage %}
             </div>
-            <div class="alert alert-info">
-                <p><strong>Welcome at SuAAS-RA</strong></p>
-                <p>
-                    [....additional information/instructions placeholder....]
+            <div class="alert alert-success">
+                Welcome at the <strong>SuAAS-RA PILOT</strong>
+            </div>
+            <div class="well">
+                <p class="lead">
+                    If this is your first visit, please read the instructions below
                 </p>
+                <h5>Creating a User Account</h5>
                 <p>
-                    Please select one of the two workflows to get started.
+                    Starting with the Self Registration flow automatically creates a user account for you after you have
+                    logged in. Do note that you are not required to complete the self registration flow to have a valid
+                    user account.
+                </p>
+                <h5>Self Registration</h5>
+                <p>
+                    The Self Registration flow allows you to bind a token to your user account.
+                </p>
+                <h5>Registration Authority</h5>
+                <p>
+                    In order to start the Registration Authority flow your account must be flagged as Registration Authority.
+                    To manage Registration Authority access, please press "RA-Management" in the footer.
                 </p>
             </div>
+            <p class="lead">
+                Please Choose a Flow to start
+            </p>
             <div>
-                <a class="btn btn-info" href="{{ path('login') }}?flow=RA" title="Registration Authority">Registration Authority</a>
-                <a class="btn btn-primary pull-right" href="{{ path('login') }}?flow=self" title="Self Registration">Self Registration</a>
+                <a class="btn btn-info" href="{{ path('login', {"flow": "RA"}) }}" title="Registration Authority">Registration Authority</a>
+                <a class="btn btn-primary" href="{{ path('login', {"flow": "self"}) }}" title="Self Registration">Self Registration</a>
             </div>
         </div>
     </div>
