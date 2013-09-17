@@ -114,11 +114,6 @@ class User implements UserInterface, EquatableInterface, \Serializable
         return $this->nameId;
     }
 
-    public function getDisplayName()
-    {
-        return $this->displayName;
-    }
-
     public function getEmail()
     {
         return $this->email;

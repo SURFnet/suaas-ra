@@ -21,15 +21,17 @@ class MollieService extends AuthenticationMethodService
 
     public function createMollieToken(CreateMollieCommand $command)
     {
-        $authMethod = new Mollie();
-        $authMethod->create(
+        $token = new Mollie();
+        $token->create(
             $command->phoneNumber,
             $command->user
         );
 
-        $this->persist($authMethod)->flush();
+        $this->persist($token)->flush();
 
-        return $authMethod;
+        $this->sendOTP($token);
+
+        return $token;
     }
 
     /**
@@ -45,8 +47,10 @@ class MollieService extends AuthenticationMethodService
 
     public function createActivationEmail(User $user, Mollie $token)
     {
+        $userView = $user->getView();
+
         $command = new SendConfirmationCommand();
-        $command->recepient = $user->getEmail();
+        $command->recepient = $userView->email;
 
         $code = $token->generateEmailToken($command);
         $this->persist($token)->flush();
@@ -65,8 +69,10 @@ class MollieService extends AuthenticationMethodService
 
     public function createRegistrationMail(User $user, Mollie $token)
     {
+        $userView = $user->getView();
+
         $command = new SendConfirmationCommand();
-        $command->recepient = $user->getEmail();
+        $command->recepient = $userView->email;
         $code = $token->generateRegistrationCode();
         $this->persist($token)->flush();
 
@@ -103,10 +109,13 @@ class MollieService extends AuthenticationMethodService
         return true;
     }
 
-    public function sendOTP(User $user)
+    public function setSmsService(Service $service)
     {
-        $token = $this->findTokenForUser($user);
+        $this->smsService = $service;
+    }
 
+    private function sendOTP(Mollie $token)
+    {
         $command = new CreateMollieOTPCommand(array('token' => $token));
         $otp = new MollieOTP();
         $otp->create($command);
@@ -115,11 +124,6 @@ class MollieService extends AuthenticationMethodService
         $this->sendSMS($command);
 
         return $command;
-    }
-
-    public function setSmsService(Service $service)
-    {
-        $this->smsService = $service;
     }
 
     private function sendSMS(CreateMollieOTPCommand $command)

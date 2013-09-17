@@ -6,12 +6,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use SURFnet\SuAAS\DomainBundle\Command\CreateMollieCommand;
 use SURFnet\SuAAS\DomainBundle\Command\VerifyMollieTokenCommand;
+use SURFnet\SuAAS\DomainBundle\Entity\Mollie;
 use SURFnet\SuAAS\SelfServiceBundle\Form\Type\CreateMollieType;
 use SURFnet\SuAAS\SelfServiceBundle\Form\Type\VerifyMollieTokenType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 /**
  * Class DefaultController
@@ -39,7 +41,7 @@ class WizardController extends Controller
         }
 
         return array(
-            'user' => $user,
+            'user' => $user->getView(),
             'tokenWarning' => $hasToken
         );
     }
@@ -54,9 +56,7 @@ class WizardController extends Controller
     {
         /** @var \SURFnet\SuAAS\SelfServiceBundle\Form\Type\CreateMollieType $form */
         /** @var \SURFnet\SuAAS\DomainBundle\Service\MollieService $service */
-        $command = new CreateMollieCommand();
-        $form = $this->createForm(new CreateMollieType(), $command);
-        $service = $this->get('suaas.service.mollie');
+        $form = $this->createForm(new CreateMollieType(), new CreateMollieCommand());
         $user = $this->get('security.context')->getToken()->getUser();
 
         $form->handleRequest($this->getRequest());
@@ -65,43 +65,17 @@ class WizardController extends Controller
             $command = $form->getData();
             $command->user = $user;
 
-            $service->createMollieToken($command);
+            $this->get('suaas.service.mollie')->createMollieToken($command);
 
-            $this->get('session')->set('redirect_after_sms', 'self_service_link_sms_verify');
-            return $this->redirect($this->generateUrl('self_service_link_sms_auth'));
+            return $this->redirect($this->generateUrl('self_service_link_sms_verify'));
         }
 
         return array(
-            'user' => $user,
-            'tokenType' => 'SMS',
+            'user' => $user->getView(),
+            'tokenType' => (new Mollie())->getType(),
             'tokenExtended' => 'an SMS based one-time-password',
             'form' => $form->createView(),
         );
-    }
-
-    /**
-     * @Route("/link-token/sms/authentication", name="self_service_link_sms_auth")
-     * @Method("GET")
-     */
-    public function sendSmsAction()
-    {
-        $redirectAfter = $this->get('session')->get('redirect_after_sms', false);
-
-        if ($redirectAfter === false) {
-            return $this->error('You tried to access a page that could not be accessed');
-        }
-        $this->get('session')->remove('redirect_after_sms');
-
-        $service = $this->get('suaas.service.mollie');
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        if ($service->hasPendingOTP($user)) {
-            return $this->error('You still have a pending token, please log out and start again');
-        } else {
-            $service->sendOTP($user);
-        }
-
-        return $this->redirect($this->generateUrl($redirectAfter));
     }
 
     /**
@@ -190,7 +164,7 @@ class WizardController extends Controller
 
         return array(
             'ras' => $this->get('suaas.service.user')->findRAByOrganisation($user->getOrganisation()),
-            'user' => $user,
+            'user' => $user->getView(),
             'code' => $code
         );
     }
@@ -212,7 +186,12 @@ class WizardController extends Controller
             throw new BadRequestHttpException("Invalid Request");
         }
 
-        $user = $this->get('suaas.service.user')->loadUserByUsername($userHash);
+        try {
+            $user = $this->get('suaas.service.user')->loadUserByUsername($userHash);
+        } catch (UsernameNotFoundException $e) {
+            throw new BadRequestHttpException("Invalid Request", $e);
+        }
+
         $service = $this->get('suaas.service.authentication_method');
 
         if (!$service->confirmRegistration($user, $registrationCode)) {

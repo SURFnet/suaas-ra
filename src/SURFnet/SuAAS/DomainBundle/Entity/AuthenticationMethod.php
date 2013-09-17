@@ -162,11 +162,12 @@ abstract class AuthenticationMethod
 
     public function getRegistrationView()
     {
+        $owner = $this->owner->getView();
         return new RegistrationView(
             array(
                 'requestedAt' => $this->requestedAt,
-                'name' => $this->owner->getDisplayName(),
-                'email' => $this->owner->getEmail(),
+                'name' => $owner->name,
+                'email' => $owner->email,
                 'tokenType' => $this->getType(),
                 'tokenId' => $this->id
             )

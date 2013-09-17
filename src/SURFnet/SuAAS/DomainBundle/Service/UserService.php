@@ -3,7 +3,6 @@
 namespace SURFnet\SuAAS\DomainBundle\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
 use SURFnet\SuAAS\DomainBundle\Command\PromoteRACommand;
 use SURFnet\SuAAS\DomainBundle\Entity\Organisation;
 use SURFnet\SuAAS\DomainBundle\Entity\RegistrationAuthority;
