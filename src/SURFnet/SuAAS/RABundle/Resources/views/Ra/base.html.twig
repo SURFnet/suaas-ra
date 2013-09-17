@@ -11,6 +11,7 @@
                     <img src="{{ asset_url }}" class="pull-right" alt="SURFnet Logo"/>
                 {% endimage %}
             </div>
+            {% block menu %}
             <div>
                 <ul class="nav nav-tabs">
                     <li class="active">
@@ -24,6 +25,7 @@
                     </li>
                 </ul>
             </div>
+            {% endblock %}
             {% block page_content %}{% endblock page_content %}
         </div>
     </div>

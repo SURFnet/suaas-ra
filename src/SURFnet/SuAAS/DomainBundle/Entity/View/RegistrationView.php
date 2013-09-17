@@ -8,4 +8,5 @@ class RegistrationView extends AbstractView
     public $name;
     public $email;
     public $tokenType;
+    public $tokenId;
 }

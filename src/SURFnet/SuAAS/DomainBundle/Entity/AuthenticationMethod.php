@@ -124,7 +124,8 @@ abstract class AuthenticationMethod
                 'requestedAt' => $this->requestedAt,
                 'name' => $this->owner->getDisplayName(),
                 'email' => $this->owner->getEmail(),
-                'tokenType' => $this->getType()
+                'tokenType' => $this->getType(),
+                'tokenId' => $this->id
             )
         );
     }

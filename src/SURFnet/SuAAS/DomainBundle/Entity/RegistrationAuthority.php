@@ -3,13 +3,14 @@
 namespace SURFnet\SuAAS\DomainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use SURFnet\SuAAS\DomainBundle\Command\PromoteRACommand;
 
 /**
  * RegistrationAuthority
  * @package SURFnet\SuAAS\DomainBundle\Entity
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="SURFnet\SuAAS\DomainBundle\Entity\RegistrationAuthorityRepository")
+ * @ORM\Entity()
  *
  * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
  */
@@ -45,4 +46,17 @@ class RegistrationAuthority
      * @ORM\Column(name="location", type="string", length=200, nullable=true)
      */
     private $location;
+
+    public function create(User $user, PromoteRACommand $command)
+    {
+        if ($this->id) {
+            throw new \RuntimeException("Cannot create pre-existing RA");
+        }
+
+        $this->user = $user;
+        $this->contactInfo = $command->contactInfo;
+        $this->location = $command->location;
+
+        return $this;
+    }
 }

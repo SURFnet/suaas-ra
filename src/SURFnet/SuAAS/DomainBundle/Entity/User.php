@@ -3,6 +3,7 @@
 namespace SURFnet\SuAAS\DomainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use SURFnet\SuAAS\DomainBundle\Entity\View\UserView;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -88,6 +89,16 @@ class User implements UserInterface, EquatableInterface, \Serializable
         $this->email = $email;
 
         return $this;
+    }
+
+    public function getView()
+    {
+        return new UserView(array(
+            'id' => $this->id,
+            'name' => $this->displayName,
+            'email' => $this->email,
+            'isRa' => $this->isRA(),
+        ));
     }
 
     public function getUsername()

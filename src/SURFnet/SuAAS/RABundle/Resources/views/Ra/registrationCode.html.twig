@@ -1,0 +1,23 @@
+{% extends 'SURFnetSuAASRABundle:RA:base.html.twig' %}
+
+{% block title %}{{ parent() }} - Enter Registration Code{% endblock %}
+
+{% block page_content %}
+    <div class="row-fluid">
+        <div class="row-fluid">
+            <div class="span8">
+                <div class="alert alert-info">
+                    To register a new user to a security token, please enter the
+                    registration code of the user that was provided by the 'SuAAS
+                    - User Self Registration' portal.
+                </div>
+                <form action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" method="post" class="form-horizontal offset-top" {{ form_enctype(form) }}>
+                {{ form_rest(form) }}
+                </form>
+            </div>
+            <div class="span4">
+                {{ tokenThumbnails(false, {1:'SMS'}) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

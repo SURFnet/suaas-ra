@@ -13,6 +13,22 @@ use Doctrine\ORM\NoResultException;
  */
 class UserRepository extends EntityRepository
 {
+    public function removeRAByUSer(User $user)
+    {
+        $dql = "
+            DELETE FROM
+                SURFnetSuAASDomainBundle:RegistrationAuthority ra
+            WHERE
+                ra.user = :user
+        ";
+
+        $this
+            ->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter('user', $user)
+            ->execute();
+    }
+
     /**
      *
      *
@@ -21,16 +37,13 @@ class UserRepository extends EntityRepository
      */
     public function findByUsername($username)
     {
-        $dql = $this
+        return $this
             ->createQueryBuilder('u')
             ->select('u')
             ->where('u.nameId = :nameId')
             ->setParameter('nameId', $username)
             ->getQuery()
+            ->getOneOrNullResult()
         ;
-
-        $user = $dql->getOneOrNullResult();
-
-        return $user;
     }
 }

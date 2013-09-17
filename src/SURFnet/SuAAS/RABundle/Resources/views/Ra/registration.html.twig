@@ -20,7 +20,7 @@
             <td>{{ token.name }}</td>
             <td>{{ token.email }}</td>
             <td>{{ token.tokenType }}</td>
-            <td><i class="icon-ok icon-large text-success"></i> <i class="icon-trash icon-large text-error"></i></td>
+            <td><a class="btn btn-primary btn-small" href="{{ path("management_registration_code", {"token":token.tokenId}) }}" title="Start vetting procedure"><i class="icon-ok icon-large"></i> Register</a></td>
         </tr>
         {% endfor %}
     </tbody>
