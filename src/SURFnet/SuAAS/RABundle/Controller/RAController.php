@@ -89,6 +89,10 @@ class RAController extends Controller
      */
     public function registrationCodeAction(AuthenticationMethod $token)
     {
+        if (!$token->canVerifyRegistrationCode()) {
+            return $this->error('Can not yet confirm the registration code of this token');
+        }
+
         $service = $this->get('suaas.service.authentication_method');
 
         $form = $this->createForm(
@@ -99,21 +103,48 @@ class RAController extends Controller
         $form->handleRequest($this->getRequest());
 
         if ($form->isValid() && $service->verifyRegistrationCode($token, $form)) {
-            return $this->redirect($this->generateUrl('management_approve'));
+            return $this->redirect($this->generateUrl('management_confirm_token'));
         }
 
         return array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'tokenType' => $token->getType()
         );
     }
 
     /**
-     * @Route("/registration/approve/{token}", name="management_approve")
+     * @Route("/registration/confirm-token/{token}", name="management_confirm_token")
      * @Template()
      */
-    public function approveAction()
+    public function confirmTokenAction(AuthenticationMethod $token)
     {
+        if (!$token->canConfirmToken()) {
+            return $this->error('This token cannot be confirmed yet.');
+        }
 
+        return array(
+            'tokenType' => $token->getType()
+        );
     }
 
+    /**
+     * @Route("/registration/confirm-identity/{token}", name="management_confirm_identity")
+     * @Template()
+     */
+    public function confirmIdentityAction(AuthenticationMethod $token)
+    {
+        if (!$token->canConfirmIdentity()) {
+            return $this->error('Can not yet confirm the identity of the owner of this token');
+        }
+
+        return array(
+            'tokenType' => $token->getType()
+        );
+    }
+
+    private function error($message)
+    {
+        $this->get('session')->set('error_message', $message);
+        return $this->redirect($this->generateUrl('error'));
+    }
 }

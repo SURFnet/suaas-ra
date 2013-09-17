@@ -1,0 +1,22 @@
+{% extends 'SURFnetSuAASRABundle:RA:base.html.twig' %}
+
+{% block title %}{{ parent() }} - Confirm Identity{% endblock %}
+
+{% block page_content %}
+    <div class="row-fluid">
+        <div class="row-fluid">
+            <div class="span8">
+                <div class="alert alert-info">
+                    Please verify that the <strong>Identity Document</strong> of
+                    the user matches the user information below
+                </div>
+                {#<form action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" method="post" class="form-horizontal offset-top" {{ form_enctype(form) }}>#}
+                {#{{ form_rest(form) }}#}
+                {#</form>#}
+            </div>
+            <div class="span4">
+                {{ tokenThumbnails(false, {1:tokenType}) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

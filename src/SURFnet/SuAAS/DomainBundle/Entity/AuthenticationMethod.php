@@ -65,6 +65,13 @@ abstract class AuthenticationMethod
     /**
      * @var \DateTime
      *
+     * @ORM\Column(name="token_ownership_confirmed_at", type="datetime", nullable=true)
+     */
+    protected $tokenOwnershipConfirmedAt;
+
+    /**
+     * @var \DateTime
+     *
      * @ORM\Column(name="approved_at", type="datetime", nullable=true)
      */
     protected $approvedAt;
@@ -98,7 +105,7 @@ abstract class AuthenticationMethod
      */
     protected $lastUsedAt;
 
-    abstract protected function getType();
+    abstract public function getType();
 
     public function generateEmailToken()
     {
@@ -133,6 +140,24 @@ abstract class AuthenticationMethod
         }
 
         return false;
+    }
+
+    public function canVerifyRegistrationCode()
+    {
+        return $this->registrationCode !== null
+                && $this->registrationCodeConfirmedAt === null;
+    }
+
+    public function canConfirmToken()
+    {
+        return $this->registrationCodeConfirmedAt !== null
+                && $this->tokenOwnershipConfirmedAt === null;
+    }
+
+    public function canConfirmIdentity()
+    {
+        return $this->tokenOwnershipConfirmedAt !== null
+                && $this->approvedAt === null;
     }
 
     public function getRegistrationView()
