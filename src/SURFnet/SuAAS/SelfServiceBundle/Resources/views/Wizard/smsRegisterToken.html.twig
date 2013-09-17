@@ -28,6 +28,7 @@
                         </p>
                     </div>
                     <h4>Registration Officers</h4>
+                {% if ras.count > 0 %}
                     <table class="table table-striped table-hover">
                         <thead>
                             <tr>
@@ -37,18 +38,21 @@
                             </tr>
                         </thead>
                         <tbody>
+                    {% for ra in ras %}
                             <tr>
-                                <td>placeholder</td>
-                                <td>placeholder</td>
-                                <td>placeholder</td>
+                                <td>{{ ra.name }}</td>
+                                <td>{{ ra.location }}</td>
+                                <td>{{ ra.contactInfo }}</td>
                             </tr>
-                            <tr>
-                                <td>placeholder</td>
-                                <td>placeholder</td>
-                                <td>placeholder</td>
-                            </tr>
+                    {% endfor %}
                         </tbody>
                     </table>
+                {% else %}
+                    <div class="alert alert-danger">
+                        There are no known Registration Authorities for your Organisation
+                    </div>
+                {% endif %}
+
                 </div>
                 <div class="span4">
                     {{ tokenThumbnails(false, {1:'SMS'}) }}

@@ -2,6 +2,7 @@
 
 namespace SURFnet\SuAAS\DomainBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 
@@ -13,6 +14,18 @@ use Doctrine\ORM\NoResultException;
  */
 class UserRepository extends EntityRepository
 {
+    public function findRAForOrganisation(Organisation $organisation)
+    {
+        $ras = $this->createQueryBuilder('u')
+            ->innerJoin('u.registrationAuthority', 'ra')
+            ->where('u.organisation = :organisation')
+            ->setParameter('organisation', $organisation)
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($ras);
+    }
+
     public function removeRAByUSer(User $user)
     {
         $dql = "

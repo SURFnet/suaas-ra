@@ -97,7 +97,7 @@ class RAController extends Controller
         $form->handleRequest($this->getRequest());
 
         if ($form->isValid()) {/*} && $service->verifyRegistrationCode()) {*/
-            echo 'yey';
+
         }
 
         return array(

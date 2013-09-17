@@ -189,6 +189,7 @@ class WizardController extends Controller
         $this->get('suaas.mailer')->sendMail($mail);
 
         return array(
+            'ras' => $this->get('suaas.service.user')->findRAByOrganisation($user->getOrganisation()),
             'user' => $user,
             'code' => $code
         );

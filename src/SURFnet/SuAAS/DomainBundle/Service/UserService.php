@@ -3,6 +3,7 @@
 namespace SURFnet\SuAAS\DomainBundle\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use SURFnet\SuAAS\DomainBundle\Command\PromoteRACommand;
 use SURFnet\SuAAS\DomainBundle\Entity\Organisation;
 use SURFnet\SuAAS\DomainBundle\Entity\RegistrationAuthority;
@@ -24,6 +25,16 @@ class UserService extends ORMService implements UserProviderInterface
         return $users->map(function(User $user){
             return $user->getView();
         });
+    }
+
+    public function findRAByOrganisation(Organisation $organisation)
+    {
+        return $this
+            ->getRepository()
+            ->findRAForOrganisation($organisation)
+            ->map(function(User $user){
+                return $user->getRegistrationAuthorityView();
+            });
     }
 
     public function promoteRA(User $user, PromoteRACommand $command)

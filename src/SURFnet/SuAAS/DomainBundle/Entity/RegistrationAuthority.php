@@ -4,6 +4,7 @@ namespace SURFnet\SuAAS\DomainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use SURFnet\SuAAS\DomainBundle\Command\PromoteRACommand;
+use SURFnet\SuAAS\DomainBundle\Entity\View\RegistrationAuthorityView;
 
 /**
  * RegistrationAuthority
@@ -58,5 +59,17 @@ class RegistrationAuthority
         $this->location = $command->location;
 
         return $this;
+    }
+
+    public function getView(RegistrationAuthorityView $view = null)
+    {
+        if ($view === null) {
+            $view = new RegistrationAuthorityView();
+        }
+
+        $view->contactInfo = $this->contactInfo;
+        $view->location = $this->location;
+
+        return $view;
     }
 }

@@ -3,6 +3,7 @@
 namespace SURFnet\SuAAS\DomainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use SURFnet\SuAAS\DomainBundle\Entity\View\RegistrationAuthorityView;
 use SURFnet\SuAAS\DomainBundle\Entity\View\UserView;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\EquatableInterface;
@@ -99,6 +100,13 @@ class User implements UserInterface, EquatableInterface, \Serializable
             'email' => $this->email,
             'isRa' => $this->isRA(),
         ));
+    }
+
+    public function getRegistrationAuthorityView()
+    {
+        $view = new RegistrationAuthorityView(array('name' => $this->displayName));
+
+        return $this->registrationAuthority->getView($view);
     }
 
     public function getUsername()
