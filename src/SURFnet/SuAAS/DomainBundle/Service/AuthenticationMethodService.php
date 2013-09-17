@@ -2,8 +2,11 @@
 
 namespace SURFnet\SuAAS\DomainBundle\Service;
 
+use SURFnet\SuAAS\DomainBundle\Command\VerifyRegistrationCodeCommand;
 use SURFnet\SuAAS\DomainBundle\Entity\AuthenticationMethod;
 use SURFnet\SuAAS\DomainBundle\Entity\User;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
 
 class AuthenticationMethodService extends ORMService
 {
@@ -39,10 +42,22 @@ class AuthenticationMethodService extends ORMService
         return true;
     }
 
-    public function getTokensToVet()
+    public function verifyRegistrationCode(AuthenticationMethod $token, Form $form)
+    {
+        if (!$token->matchRegistrationCode($form->getData())) {
+            $form->get('code')->addError(new FormError('Invalid Code Entered'));
+            return false;
+        }
+
+        $this->persist($token)->flush();
+
+        return true;
+    }
+
+    public function getTokensToVet(User $user)
     {
         /** @var \Doctrine\Common\Collections\ArrayCollection $tokens */
-        $tokens = $this->getRepository()->findUnvettedTokens();
+        $tokens = $this->getRepository()->findUnvettedTokens($user->getOrganisation());
 
         return $tokens->map(function ($token) {
             return $token->getRegistrationView();

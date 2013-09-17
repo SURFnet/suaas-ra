@@ -12,6 +12,7 @@ use SURFnet\SuAAS\DomainBundle\Entity\User;
 use SURFnet\SuAAS\RABundle\Form\Type\CreateRAType;
 use SURFnet\SuAAS\RABundle\Form\Type\VerifyRegistrationCodeType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 
 /**
  * Class RAController
@@ -29,9 +30,10 @@ class RAController extends Controller
      */
     public function registrationAction()
     {
-        return array(
-            'items' => $this->get('suaas.service.authentication_method')->getTokensToVet()
-        );
+        $currentRa = $this->get('security.context')->getToken()->getUser();
+        $candidates = $this->get('suaas.service.authentication_method')->getTokensToVet($currentRa);
+
+        return array('candidates' => $candidates);
     }
 
     /**
@@ -82,7 +84,7 @@ class RAController extends Controller
     }
 
     /**
-     * @Route("/registration/code/{token}", name="management_registration_code")
+     * @Route("/registration/confirm-code/{token}", name="management_registration_code")
      * @Template()
      */
     public function registrationCodeAction(AuthenticationMethod $token)
@@ -96,12 +98,22 @@ class RAController extends Controller
 
         $form->handleRequest($this->getRequest());
 
-        if ($form->isValid()) {/*} && $service->verifyRegistrationCode()) {*/
-
+        if ($form->isValid() && $service->verifyRegistrationCode($token, $form)) {
+            return $this->redirect($this->generateUrl('management_approve'));
         }
 
         return array(
             'form' => $form->createView()
         );
     }
+
+    /**
+     * @Route("/registration/approve/{token}", name="management_approve")
+     * @Template()
+     */
+    public function approveAction()
+    {
+
+    }
+
 }

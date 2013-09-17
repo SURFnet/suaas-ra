@@ -3,6 +3,7 @@
 namespace SURFnet\SuAAS\DomainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use SURFnet\SuAAS\DomainBundle\Command\VerifyRegistrationCodeCommand;
 use SURFnet\SuAAS\DomainBundle\Entity\View\RegistrationView;
 
 /**
@@ -53,6 +54,13 @@ abstract class AuthenticationMethod
      * @ORM\Column(name="registration_code", type="string", length=8, nullable=true)
      */
     protected $registrationCode;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="confirmed_at", type="datetime", nullable=true)
+     */
+    protected $registrationCodeConfirmedAt;
 
     /**
      * @var \DateTime
@@ -115,6 +123,16 @@ abstract class AuthenticationMethod
     public function hasRegistrationCode()
     {
         return (bool) $this->registrationCode;
+    }
+
+    public function matchRegistrationCode(VerifyRegistrationCodeCommand $command)
+    {
+        if ($this->registrationCode === $command->code) {
+            $this->registrationCodeConfirmedAt = new \DateTime();
+            return true;
+        }
+
+        return false;
     }
 
     public function getRegistrationView()

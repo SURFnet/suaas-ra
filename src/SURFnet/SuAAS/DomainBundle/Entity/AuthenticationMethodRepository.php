@@ -103,13 +103,17 @@ class AuthenticationMethodRepository extends EntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findUnvettedTokens()
+    public function findUnvettedTokens(Organisation $organisation)
     {
         $results = $this
             ->createQueryBuilder('t')
-            ->where('t.approvedAt IS NULL')
+            ->select('t')
+            ->innerJoin('t.owner', 'u')
+            ->where('u.organisation = :organisation')
+            ->andWhere('t.registrationCodeConfirmedAt IS NULL')
             ->andWhere('t.requestedAt IS NOT NULL')
             ->andWhere('t.registrationCode IS NOT NULL')
+            ->setParameter('organisation', $organisation)
             ->getQuery()
             ->getResult();
 

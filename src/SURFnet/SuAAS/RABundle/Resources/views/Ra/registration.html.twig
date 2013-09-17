@@ -3,26 +3,32 @@
 {% block title %}{{ parent() }} - Registration{% endblock title %}
 
 {% block page_content %}
-<table class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th>Requested At</th>
-            <th>Display Name</th>
-            <th>Email</th>
-            <th>TokenType</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for token in items %}
-        <tr>
-            <td>{{ token.requestedAt|date("Y-m-d") }}</td>
-            <td>{{ token.name }}</td>
-            <td>{{ token.email }}</td>
-            <td>{{ token.tokenType }}</td>
-            <td><a class="btn btn-primary btn-small" href="{{ path("management_registration_code", {"token":token.tokenId}) }}" title="Start vetting procedure"><i class="icon-ok icon-large"></i> Register</a></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% if candidates.count > 0 %}
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Requested At</th>
+                <th>Display Name</th>
+                <th>Email</th>
+                <th>TokenType</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for token in candidates %}
+            <tr>
+                <td>{{ token.requestedAt|date("Y-m-d") }}</td>
+                <td>{{ token.name }}</td>
+                <td>{{ token.email }}</td>
+                <td>{{ token.tokenType }}</td>
+                <td><a class="btn btn-primary btn-small" href="{{ path("management_registration_code", {"token":token.tokenId}) }}" title="Start vetting procedure"><i class="icon-ok icon-large"></i> Register</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-danger">
+        There are no pending registration requests
+    </div>
+{% endif %}
 {% endblock %}
