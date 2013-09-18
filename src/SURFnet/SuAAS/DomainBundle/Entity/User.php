@@ -56,6 +56,20 @@ class User implements UserInterface, EquatableInterface, \Serializable
     private $email;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $givenName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $surname;
+
+    /**
      * @var Organisation
      *
      * @ORM\ManyToOne(targetEntity="Organisation")
@@ -70,7 +84,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
      */
     private $registrationAuthority;
 
-    public function create($nameId, Organisation $organisation, $displayName, $email)
+    public function create(SAMLIdentity $identity, Organisation $organisation)
     {
         if ($this->id) {
             throw new \LogicException(
@@ -78,16 +92,12 @@ class User implements UserInterface, EquatableInterface, \Serializable
             );
         }
 
-        // @todo expand and implement
-//        if (!is_string($nameId)) {
-//            throw new \InvalidArgumentException(
-//                ""
-//            )
-//        }
-        $this->nameId = $nameId;
+        $this->nameId = $identity->getNameId();
         $this->organisation = $organisation;
-        $this->displayName = $displayName;
-        $this->email = $email;
+        $this->displayName = $identity->getDisplayName();
+        $this->email = $identity->getEmail();
+        $this->givenName = $identity->getGivenName();
+        $this->surname = $identity->getSurname();
 
         return $this;
     }
@@ -98,6 +108,8 @@ class User implements UserInterface, EquatableInterface, \Serializable
             'id' => $this->id,
             'name' => $this->displayName,
             'email' => $this->email,
+            'firstName' => $this->givenName,
+            'surname' => $this->surname,
             'isRa' => $this->isRA(),
         ));
     }

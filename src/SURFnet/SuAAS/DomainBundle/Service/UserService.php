@@ -71,12 +71,7 @@ class UserService extends ORMService implements UserProviderInterface
 
             $organisation = $this->resolveOrganisation($identity->getSchacHomeOrganisation());
             $user = new User();
-            $user->create(
-                $identity->getNameId(),
-                $organisation,
-                $identity->getDisplayName(),
-                $identity->getEmail()
-            );
+            $user->create($identity, $organisation);
 
             $this->persist($user)->flush();
         }

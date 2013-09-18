@@ -1,11 +1,15 @@
 parameters:
     surfnet.onelogin_bridge.configuration.class:            SURFnet\OneLoginBridgeBundle\SAML\Configuration
     surfnet.onelogin_bridge.settings.class:                 SURFnet\OneLoginBridgeBundle\SAML\Settings
+
     surfnet.saml.attributes.class:                          SURFnet\OneLoginBridgeBundle\SAML\Attributes
     surfnet.saml.attribute.display_name.class:              SURFnet\OneLoginBridgeBundle\SAML\Attribute\DisplayName
+    surfnet.saml.attribute.given_name.class:                SURFnet\OneLoginBridgeBundle\SAML\Attribute\GivenName
     surfnet.saml.attribute.mail.class:                      SURFnet\OneLoginBridgeBundle\SAML\Attribute\Mail
     surfnet.saml.attribute.schac_home_organisation.class:   SURFnet\OneLoginBridgeBundle\SAML\Attribute\SchacHomeOrganisation
+    surfnet.saml.attribute.surname.class:                   SURFnet\OneLoginBridgeBundle\SAML\Attribute\Surname
     surfnet.saml.attribute.uid.class:                       SURFnet\OneLoginBridgeBundle\SAML\Attribute\Uid
+
     surfnet.saml.request.class:                             OneLogin_Saml_AuthRequest
     surfnet.saml.metadata.class:                            OneLogin_Saml_Metadata
     surfnet.saml.response.class:                            SURFnet\OneLoginBridgeBundle\Service\ResponseAdapter
@@ -47,6 +51,11 @@ services:
         tags:
             -  { name: saml.attribute }
 
+    surfnet.saml.attribute.given_name:
+        class: %surfnet.saml.attribute.given_name.class%
+        tags:
+            -  { name: saml.attribute }
+
     surfnet.saml.attribute.mail:
         class: %surfnet.saml.attribute.mail.class%
         tags:
@@ -56,6 +65,11 @@ services:
         class: %surfnet.saml.attribute.schac_home_organisation.class%
         tags:
             -  { name: saml.attribute }
+
+    surfnet.saml.attribute.surname:
+            class: %surfnet.saml.attribute.surname.class%
+            tags:
+                -  { name: saml.attribute }
 
     surfnet.saml.attribute.uid:
         class: %surfnet.saml.attribute.uid.class%

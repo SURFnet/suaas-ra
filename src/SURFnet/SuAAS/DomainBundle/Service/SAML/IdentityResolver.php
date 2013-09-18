@@ -3,8 +3,10 @@
 namespace SURFnet\SuAAS\DomainBundle\Service\SAML;
 
 use SURFnet\OneLoginBridgeBundle\SAML\Attribute\DisplayName;
+use SURFnet\OneLoginBridgeBundle\SAML\Attribute\GivenName;
 use SURFnet\OneLoginBridgeBundle\SAML\Attribute\Mail;
 use SURFnet\OneLoginBridgeBundle\SAML\Attribute\SchacHomeOrganisation;
+use SURFnet\OneLoginBridgeBundle\SAML\Attribute\Surname;
 use SURFnet\OneLoginBridgeBundle\Service\ResponseAdapter;
 use SURFnet\SuAAS\DomainBundle\Entity\SAMLIdentity;
 
@@ -16,7 +18,9 @@ class IdentityResolver
             $response->getNameId(),
             $response->getAttribute(SchacHomeOrganisation::NAME),
             $response->getAttribute(DisplayName::NAME),
-            $response->getAttribute(Mail::NAME)
+            $response->getAttribute(Mail::NAME),
+            $response->getAttribute(GivenName::NAME),
+            $response->getAttribute(Surname::NAME)
         );
     }
 }
