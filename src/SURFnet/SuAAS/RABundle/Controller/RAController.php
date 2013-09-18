@@ -195,7 +195,7 @@ class RAController extends Controller
         $form = $this->createForm(
             new VerifyIdentityType(),
             new VerifyIdentityCommand(array('approvedBy' => $ra))
-        );`
+        );
 
         $form->handleRequest($this->getRequest());
 

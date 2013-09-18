@@ -74,7 +74,13 @@ class Service
             ->set('originator', $this->originator)
             ->set('recipients', array('316' . $message->recipient))
             ->set('message', (string) $message->body);
-return true;
+
+// FOR DEBUGGING
+//      only if you have access to the DB:
+//      uncomment the following line to NOT send
+//      an SMS, the rest will work as usual
+//return true;
+
         $response = $request->send();
 
         $xml = $response->xml();
