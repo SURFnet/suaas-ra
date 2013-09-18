@@ -4,7 +4,7 @@ namespace SURFnet\SuAAS\DomainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use SURFnet\SuAAS\DomainBundle\Command\VerifyRegistrationCodeCommand;
-use SURFnet\SuAAS\DomainBundle\Entity\View\RegistrationView;
+use SURFnet\SuAAS\DomainBundle\Entity\View\AuthenticationMethodView;
 
 /**
  * AuthenticationMethod
@@ -160,14 +160,31 @@ abstract class AuthenticationMethod
                 && $this->approvedAt === null;
     }
 
-    public function getRegistrationView()
+    public function confirm()
     {
-        $owner = $this->owner->getView();
-        return new RegistrationView(
+        $this->tokenOwnershipConfirmedAt = new \DateTime();
+    }
+
+    public function approve(User $user)
+    {
+        $this->approvedAt = new \DateTime();
+        $this->approvedBy = $user;
+    }
+
+    public function decline()
+    {
+        $this->approvedBy = null;
+        $this->approvedAt = null;
+        $this->tokenOwnershipConfirmedAt = null;
+        $this->registrationCodeConfirmedAt = null;
+    }
+
+    public function getView()
+    {
+        return new AuthenticationMethodView(
             array(
                 'requestedAt' => $this->requestedAt,
-                'name' => $owner->name,
-                'email' => $owner->email,
+                'owner' => $this->owner->getView(),
                 'tokenType' => $this->getType(),
                 'tokenId' => $this->id
             )

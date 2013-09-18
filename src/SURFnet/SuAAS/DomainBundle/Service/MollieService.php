@@ -88,9 +88,8 @@ class MollieService extends AuthenticationMethodService
         return $command;
     }
 
-    public function hasPendingOTP(User $user)
+    public function hasPendingOTP(Mollie $token)
     {
-        $token = $this->findTokenForUser($user);
         return $this->getRepository()->hasPendingMollieOTP($token);
     }
 
@@ -109,12 +108,25 @@ class MollieService extends AuthenticationMethodService
         return true;
     }
 
+    public function confirmToken(Mollie $token, VerifyMollieTokenCommand $command)
+    {
+        if (!$this->verifyToken($token, $command)) {
+            return false;
+        }
+
+        $token->confirm();
+
+        $this->persist($token)->flush();
+
+        return true;
+    }
+
     public function setSmsService(Service $service)
     {
         $this->smsService = $service;
     }
 
-    private function sendOTP(Mollie $token)
+    public function sendOTP(Mollie $token)
     {
         $command = new CreateMollieOTPCommand(array('token' => $token));
         $otp = new MollieOTP();

@@ -10,12 +10,30 @@
                     Please verify that the <strong>Identity Document</strong> of
                     the user matches the user information below
                 </div>
-                {#<form action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" method="post" class="form-horizontal offset-top" {{ form_enctype(form) }}>#}
-                {#{{ form_rest(form) }}#}
-                {#</form>#}
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <th scope="row">Given Name</th>
+                        <td>{{ token.owner.firstName }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Surname</th>
+                        <td>{{ token.owner.surname }}</td>
+                    </tr>
+                </table>
+                <form action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" method="post" class="form-horizontal offset-top" {{ form_enctype(form) }}>
+                        {{ form_rest(form) }}
+                    <div class="row-fluid">
+                        <button type="submit" class="btn btn-success pull-right"><i class="icon-ok"></i> Approve Request</button>
+                        <a type="reset" class="btn btn-danger" href="{{ path("management_decline_request", {"token": token.tokenId}) }}"><i class="icon-remove"></i> Decline Request</a>
+                        <p class="muted span6 button-note">
+                            <strong>PILOT ONLY:</strong> clicking on "<em>Decline Request</em>" will reset the state of the token such
+                            that the Registration Authority flow can be restarted.
+                        </p>
+                    </div>
+                </form>
             </div>
             <div class="span4">
-                {{ tokenThumbnails(false, {1:tokenType}) }}
+                {{ tokenThumbnails(false, {1:token.tokenType}) }}
             </div>
         </div>
     </div>

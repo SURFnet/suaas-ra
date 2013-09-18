@@ -74,7 +74,7 @@ class Service
             ->set('originator', $this->originator)
             ->set('recipients', array('316' . $message->recipient))
             ->set('message', (string) $message->body);
-
+return true;
         $response = $request->send();
 
         $xml = $response->xml();

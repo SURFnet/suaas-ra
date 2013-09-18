@@ -90,7 +90,7 @@ class WizardController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $token = $service->findTokenForUser($user);
 
-        if (!$service->hasPendingOTP($user)) {
+        if (!$service->hasPendingOTP($token)) {
             throw new BadRequestHttpException(
                 "Invalid request - no pending sms OTP."
             );
