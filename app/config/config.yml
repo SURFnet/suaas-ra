@@ -84,3 +84,8 @@ mollie_sms:
         username:       %mollie_username%
         password:       %mollie_password%
         originator:     %mollie_originator%
+
+yubico_yubikey:
+    credentials:
+        client:         %yubikey_client%
+        secret:         %yubikey_secret%

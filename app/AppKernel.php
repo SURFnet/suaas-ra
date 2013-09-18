@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new SURFnet\OneLoginBridgeBundle\SURFnetOneLoginBridgeBundle(),
             new SURFnet\SuAAS\SecurityBundle\SURFnetSuAASSecurityBundle(),
             new Mollie\SMSBundle\MollieSMSBundle(),
+            new Yubico\YubikeyBundle\YubicoYubikeyBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

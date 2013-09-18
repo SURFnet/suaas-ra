@@ -1,0 +1,7 @@
+parameters:
+#    yubico_yubikey.example.class: Yubico\YubikeyBundle\Example
+
+services:
+#    yubico_yubikey.example:
+#        class: %yubico_yubikey.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

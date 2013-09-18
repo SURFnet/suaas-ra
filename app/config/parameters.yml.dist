@@ -23,3 +23,6 @@ parameters:
     mollie_username:
     mollie_password:
     mollie_originator:
+
+    yubikey_client:
+    yubikey_secret:
