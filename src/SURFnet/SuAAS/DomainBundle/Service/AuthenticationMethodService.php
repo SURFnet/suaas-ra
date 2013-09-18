@@ -85,4 +85,21 @@ class AuthenticationMethodService extends ORMService
             return $token->getView();
         });
     }
+
+    public function getApprovedTokens(User $user)
+    {
+        /** @var \Doctrine\Common\Collections\ArrayCollection $tokens */
+        $tokens = $this->getRepository()->findVettedTokens($user->getOrganisation());
+
+        return $tokens->map(function ($token) {
+            return $token->getView();
+        });
+    }
+
+    public function remove(AuthenticationMethod $token)
+    {
+        $em = $this->doctrine->getManager();
+        $em->remove($token);
+        $em->flush();
+    }
 }

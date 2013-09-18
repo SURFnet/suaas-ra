@@ -6,6 +6,8 @@ class AuthenticationMethodView extends AbstractView
 {
     public $owner;
     public $requestedAt;
+    public $approvedAt;
+    public $approvedBy;
 
     /** @deprecated */
     public $name;

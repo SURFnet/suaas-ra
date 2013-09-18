@@ -41,6 +41,32 @@ class RAController extends Controller
     }
 
     /**
+     * @Route("/deregistration", name="management_deregistration")
+     * @Template()
+     */
+    public function deregistrationAction()
+    {
+        $currentRa = $this->get('security.context')->getToken()->getUser();
+        $approved = $this->get('suaas.service.authentication_method')->getApprovedTokens($currentRa);
+
+        return array('approved' => $approved);
+    }
+
+    /**
+     * @Route(
+     *      "/deregister/{token}",
+     *      name="management_deregister_token",
+     *      requirements={"token":"\d+"}
+     * )
+     */
+    public function deRegisterTokenAction(AuthenticationMethod $token)
+    {
+        $this->get('suaas.service.authentication_method')->remove($token);
+
+        return $this->redirect($this->generateUrl('management_deregistration'));
+    }
+
+    /**
      * [!!!] This action is for the Pilot only
      *
      * @Route("/ra/overview", name="management_ra_overview")

@@ -186,7 +186,9 @@ abstract class AuthenticationMethod
                 'requestedAt' => $this->requestedAt,
                 'owner' => $this->owner->getView(),
                 'tokenType' => $this->getType(),
-                'tokenId' => $this->id
+                'tokenId' => $this->id,
+                'approvedAt' => $this->approvedAt,
+                'approvedBy' => ($this->approvedBy ? $this->approvedBy->getView() : $this->approvedBy)
             )
         );
     }

@@ -119,4 +119,20 @@ class AuthenticationMethodRepository extends EntityRepository
 
         return new ArrayCollection($results);
     }
+
+    public function findVettedTokens(Organisation $organisation)
+    {
+        $results = $this
+            ->createQueryBuilder('t')
+            ->select('t')
+            ->innerJoin('t.owner', 'u')
+            ->where('u.organisation = :organisation')
+            ->andWhere('t.approvedAt IS NOT NULL')
+            ->andWhere('t.approvedBy IS NOT NULL')
+            ->setParameter('organisation', $organisation)
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($results);
+    }
 }
