@@ -30,8 +30,7 @@ assetic:
     node:           /usr/local/bin/node
     debug:          %kernel.debug%
     use_controller: false
-    bundles:        [MopaBootstrapBundle, SURFnetSuAASSelfServiceBundle]
-    #java: /usr/bin/java
+    bundles:        [MopaBootstrapBundle, SURFnetSuAASSelfServiceBundle, SURFnetSuAASRABundle]
     filters:
         cssrewrite: ~
         less:
@@ -80,3 +79,8 @@ sur_fnet_one_login_bridge:
         name_identifier_format: %saml_name_identifier_format%
         certificate:            %saml_certificate%
 
+mollie_sms:
+    credentials:
+        username:       %mollie_username%
+        password:       %mollie_password%
+        originator:     %mollie_originator%

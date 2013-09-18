@@ -14,4 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class YubiKey extends AuthenticationMethod
 {
+    public function getType()
+    {
+        return 'YubiKey';
+    }
 }

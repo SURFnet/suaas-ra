@@ -3,6 +3,8 @@
 namespace SURFnet\SuAAS\DomainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use SURFnet\SuAAS\DomainBundle\Command\VerifyRegistrationCodeCommand;
+use SURFnet\SuAAS\DomainBundle\Entity\View\AuthenticationMethodView;
 
 /**
  * AuthenticationMethod
@@ -16,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
  */
-class AuthenticationMethod
+abstract class AuthenticationMethod
 {
     /**
      * @var integer
@@ -56,6 +58,20 @@ class AuthenticationMethod
     /**
      * @var \DateTime
      *
+     * @ORM\Column(name="confirmed_at", type="datetime", nullable=true)
+     */
+    protected $registrationCodeConfirmedAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="token_ownership_confirmed_at", type="datetime", nullable=true)
+     */
+    protected $tokenOwnershipConfirmedAt;
+
+    /**
+     * @var \DateTime
+     *
      * @ORM\Column(name="approved_at", type="datetime", nullable=true)
      */
     protected $approvedAt;
@@ -89,9 +105,10 @@ class AuthenticationMethod
      */
     protected $lastUsedAt;
 
+    abstract public function getType();
+
     public function generateEmailToken()
     {
-        $this->requestedAt = new \DateTime('now');
         $token = sha1(base64_encode(openssl_random_pseudo_bytes(64)));
 
         return $this->emailToken = $token;
@@ -105,6 +122,7 @@ class AuthenticationMethod
     public function generateRegistrationCode()
     {
         $code = substr(sha1(base64_encode(openssl_random_pseudo_bytes(64))), 0, 8);
+        $this->requestedAt = new \DateTime('now');
 
         return $this->registrationCode = $code;
     }
@@ -112,5 +130,66 @@ class AuthenticationMethod
     public function hasRegistrationCode()
     {
         return (bool) $this->registrationCode;
+    }
+
+    public function matchRegistrationCode(VerifyRegistrationCodeCommand $command)
+    {
+        if ($this->registrationCode === $command->code) {
+            $this->registrationCodeConfirmedAt = new \DateTime();
+            return true;
+        }
+
+        return false;
+    }
+
+    public function canVerifyRegistrationCode()
+    {
+        return $this->registrationCode !== null
+                && $this->registrationCodeConfirmedAt === null;
+    }
+
+    public function canConfirmToken()
+    {
+        return $this->registrationCodeConfirmedAt !== null
+                && $this->tokenOwnershipConfirmedAt === null;
+    }
+
+    public function canConfirmIdentity()
+    {
+        return $this->tokenOwnershipConfirmedAt !== null
+                && $this->approvedAt === null;
+    }
+
+    public function confirm()
+    {
+        $this->tokenOwnershipConfirmedAt = new \DateTime();
+    }
+
+    public function approve(User $user)
+    {
+        $this->approvedAt = new \DateTime();
+        $this->approvedBy = $user;
+    }
+
+    public function decline()
+    {
+        $this->approvedBy = null;
+        $this->approvedAt = null;
+        $this->tokenOwnershipConfirmedAt = null;
+        $this->registrationCodeConfirmedAt = null;
+    }
+
+    public function getView()
+    {
+        return new AuthenticationMethodView(
+            array(
+                'requestedAt' => $this->requestedAt,
+                'owner' => $this->owner->getView(),
+                'tokenType' => $this->getType(),
+                'tokenId' => $this->id,
+                'approvedAt' => $this->approvedAt,
+                'approvedBy' => ($this->approvedBy ? $this->approvedBy->getView() : $this->approvedBy)
+            )
+        );
     }
 }

@@ -1,0 +1,13 @@
+{% extends "SURFnetSuAASRABundle:RA:baseNoMenu.html.twig" %}
+
+{% block title %}{{ parent() }} - RA Create{% endblock title %}
+
+{% block page_content %}
+<div class="alert alert-info alert-block">
+    <strong>Testing Purpose Only</strong>
+</div>
+Promote {{ user.name }} ({{ user.email }}) to Registration Authority:
+<form action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" method="post" class="form-horizontal offset-top" {{ form_enctype(form) }}>
+    {{ form_rest(form) }}
+</form>
+{% endblock %}

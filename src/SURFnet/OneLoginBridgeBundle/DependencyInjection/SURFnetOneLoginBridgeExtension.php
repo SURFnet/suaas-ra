@@ -22,6 +22,7 @@ class SURFnetOneLoginBridgeExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        // add settings as parameters in the Service Container
         foreach ($config['saml_settings'] as $key => $value) {
             $container->setParameter('surfnet.onelogin_bridge.saml.' . $key, $value);
         }

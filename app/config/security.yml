@@ -33,4 +33,6 @@ security:
     access_control:
         - { path: ^/(login|start), roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/saml/(redirect|metadata), roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/management/ra, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/management, roles: ROLE_ADMIN }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

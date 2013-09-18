@@ -6,11 +6,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use SURFnet\SuAAS\DomainBundle\Command\CreateMollieCommand;
 use SURFnet\SuAAS\DomainBundle\Command\VerifyMollieTokenCommand;
+use SURFnet\SuAAS\DomainBundle\Entity\Mollie;
 use SURFnet\SuAAS\SelfServiceBundle\Form\Type\CreateMollieType;
 use SURFnet\SuAAS\SelfServiceBundle\Form\Type\VerifyMollieTokenType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 /**
  * Class DefaultController
@@ -22,17 +25,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class WizardController extends Controller
 {
-    /**
-     * @Route("/start", name="self_service_start")
-     *
-     * @return array
-     */
-    public function indexAction()
-    {
-        $this->get('session')->set('target', 'self_service_selecttoken');
-        return $this->redirect($this->generateUrl('saml_login'));
-    }
-
     /**
      * @Route("/select-token", name="self_service_selecttoken")
      * @Template()
@@ -49,7 +41,7 @@ class WizardController extends Controller
         }
 
         return array(
-            'user' => $user,
+            'user' => $user->getView(),
             'tokenWarning' => $hasToken
         );
     }
@@ -64,9 +56,7 @@ class WizardController extends Controller
     {
         /** @var \SURFnet\SuAAS\SelfServiceBundle\Form\Type\CreateMollieType $form */
         /** @var \SURFnet\SuAAS\DomainBundle\Service\MollieService $service */
-        $command = new CreateMollieCommand();
-        $form = $this->createForm(new CreateMollieType(), $command);
-        $service = $this->get('suaas.service.mollie');
+        $form = $this->createForm(new CreateMollieType(), new CreateMollieCommand());
         $user = $this->get('security.context')->getToken()->getUser();
 
         $form->handleRequest($this->getRequest());
@@ -75,21 +65,21 @@ class WizardController extends Controller
             $command = $form->getData();
             $command->user = $user;
 
-            $service->createMollieToken($command);
+            $this->get('suaas.service.mollie')->createMollieToken($command);
 
-            return $this->redirect($this->generateUrl('self_service_link_sms_auth'));
+            return $this->redirect($this->generateUrl('self_service_link_sms_verify'));
         }
 
         return array(
-            'user' => $user,
-            'tokenType' => 'SMS',
+            'user' => $user->getView(),
+            'tokenType' => (new Mollie())->getType(),
             'tokenExtended' => 'an SMS based one-time-password',
             'form' => $form->createView(),
         );
     }
 
     /**
-     * @Route("/link-token/sms/authentication", name="self_service_link_sms_auth")
+     * @Route("/link-token/sms/verification", name="self_service_link_sms_verify")
      * @Template("SURFnetSuAASSelfServiceBundle:Wizard:smsAuthentication.html.twig")
      *
      * @return array
@@ -97,27 +87,31 @@ class WizardController extends Controller
     public function smsAuthenticationAction()
     {
         $service = $this->get('suaas.service.mollie');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $token = $service->findTokenForUser($user);
 
-        // call mollie to send sms if not done yet
+        if (!$service->hasPendingOTP($token)) {
+            throw new BadRequestHttpException(
+                "Invalid request - no pending sms OTP."
+            );
+        }
 
-        $token = $service->findTokenForUser(
-            $this->get('security.context')->getToken()->getUser()
+        $form = $this->createForm(
+            new VerifyMollieTokenType(),
+            new VerifyMollieTokenCommand()
         );
 
-        $command = new VerifyMollieTokenCommand();
-        $form = $this->createForm(new VerifyMollieTokenType(), $command);
-
         $form->handleRequest($this->getRequest());
-
         if ($form->isValid()) {
-            // update token
-            // this->get('suaas.service.mollie')->verifyToken($token, $form->getData())
+            if ($service->verifyToken($token, $form->getData())) {
+                return $this->redirect($this->generateUrl('self_service_confirm'));
+            }
 
-            return $this->redirect($this->generateUrl('self_service_confirm'));
+            $form->get('password')->addError(new FormError('Invalid Password'));
         }
 
         return array(
-            'user' => $this->get('security.context')->getToken()->getUser(),
+            'user' => $user,
             'tokenType' => 'SMS',
             'tokenExtended' => 'an SMS based one-time-password',
             'token' => $token,
@@ -141,7 +135,7 @@ class WizardController extends Controller
         $this->get('suaas.mailer')->sendMail($mail);
 
         return array(
-            'user' => $this->get('security.context')->getToken()->getUser(),
+            'user' => $user,
             'token' => $token
         );
     }
@@ -160,8 +154,7 @@ class WizardController extends Controller
 
         $token = $service->findTokenForUser($user);
         if ($token->hasRegistrationCode()) {
-            $this->get('session')->set('error_message', 'The token already has a registration code attached');
-            return $this->redirect($this->generateUrl('error'));
+            return $this->error('The token already has a registration code attached');
         }
 
         $mail = $service->createRegistrationMail($user, $token);
@@ -170,7 +163,8 @@ class WizardController extends Controller
         $this->get('suaas.mailer')->sendMail($mail);
 
         return array(
-            'user' => $user,
+            'ras' => $this->get('suaas.service.user')->findRAByOrganisation($user->getOrganisation()),
+            'user' => $user->getView(),
             'code' => $code
         );
     }
@@ -192,12 +186,16 @@ class WizardController extends Controller
             throw new BadRequestHttpException("Invalid Request");
         }
 
-        $user = $this->get('suaas.service.user')->loadUserByUsername($userHash);
+        try {
+            $user = $this->get('suaas.service.user')->loadUserByUsername($userHash);
+        } catch (UsernameNotFoundException $e) {
+            throw new BadRequestHttpException("Invalid Request", $e);
+        }
+
         $service = $this->get('suaas.service.authentication_method');
 
         if (!$service->confirmRegistration($user, $registrationCode)) {
-            $this->get('session')->set('error_message', 'The registration URL you tried to use is invalid');
-            return $this->redirect($this->generateUrl('error'));
+            return $this->error('The registration URL you tried to use is invalid');
         }
 
         return $this->redirect($this->generateUrl('self_service_registration_instruction'));
@@ -221,5 +219,11 @@ class WizardController extends Controller
             );
 
         return $this->redirect($this->generateUrl($targetRoute));
+    }
+
+    private function error($message)
+    {
+        $this->get('session')->set('error_message', $message);
+        return $this->redirect($this->generateUrl('error'));
     }
 }

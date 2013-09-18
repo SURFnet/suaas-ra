@@ -1,0 +1,42 @@
+{% extends "SURFnetSuAASRABundle:RA:base.html.twig" %}
+
+{% block title %}{{ parent() }} - De-Registration{% endblock title %}
+
+{% block reg_active %}{% endblock %}
+{% block dereg_active %}active{% endblock %}
+
+{% block page_content %}
+    <div class="alert alert-warning">
+        <strong>Warning!</strong><br />
+        Deregistration of a token <em>completely removes</em> the token. In order to be
+        able to register the token again, a new token has to be created and linked
+    </div>
+{% if approved.count > 0 %}
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>User Display Name</th>
+                <th>TokenType</th>
+                <th>Approved At</th>
+                <th>Approved By</th>
+                <th>De-register</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for token in approved %}
+            <tr>
+                <td>{{ token.owner.name }}</td>
+                <td>{{ token.tokenType }}</td>
+                <td>{{ token.approvedAt|date("Y-m-d") }}</td>
+                <td>{{ token.approvedBy.name }}</td>
+                <td><a href="{{ path("management_deregister_token", {"token": token.tokenId}) }}" class="btn btn-warning btn-small" title="De-Register token"><i class="icon-trash"> De-Register</i></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-danger">
+        There are no approved tokens
+    </div>
+{% endif %}
+{% endblock %}

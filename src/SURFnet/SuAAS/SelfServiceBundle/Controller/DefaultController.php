@@ -48,7 +48,9 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/login", name="login")
+     * @Route("/login/{flow}", name="login")
+     *
+     * PoC Code
      *
      * @return array
      */
@@ -59,11 +61,18 @@ class DefaultController extends Controller
 
         if ($type === false) {
             $session->set('error_message', 'Cannot determine which flow to start');
-            $this->redirect($this->generateUrl('error'));
+            return $this->redirect($this->generateUrl('error'));
         }
 
         if ($type === 'self') {
             $this->get('session')->set('target', 'self_service_selecttoken');
+        } elseif ($type === 'RA') {
+            $this->get('session')->set('target', 'management_user_overview');
+        } elseif ($type === 'RAC') {
+            $this->get('session')->set('target', 'management_ra_overview');
+        } else {
+            $this->get('session')->set('error_message', 'Cannot determine which flow to start');
+            return $this->redirect($this->generateUrl('error'));
         }
 
         return $this->redirect($this->generateUrl('saml_login'));

@@ -2,6 +2,7 @@
 
 namespace SURFnet\SuAAS\DomainBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -52,5 +53,86 @@ class AuthenticationMethodRepository extends EntityRepository
             ->setParameter('code', $code)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function hasPendingMollieOTP(Mollie $token)
+    {
+        $dql = "
+            SELECT
+                COUNT(o.id) cnt
+            FROM
+                SURFnetSuAASDomainBundle:MollieOTP o
+            WHERE
+            (   o.mollieToken = :token
+            AND o.confirmedAt IS NULL
+            )
+        ";
+
+        $result = $this
+            ->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter('token', $token)
+            ->getSingleScalarResult();
+
+        return (bool) $result;
+    }
+
+    public function findMollieOTP(Mollie $token, $otp)
+    {
+        $dql = "
+            SELECT
+                o
+            FROM
+                SURFnetSuAASDomainBundle:MollieOTP o
+            WHERE
+            (   o.mollieToken = :token
+            AND o.confirmedAt IS NULL
+            AND o.otp = :otp
+            )
+        ";
+
+        return $this
+            ->getEntityManager()
+            ->createQuery($dql)
+            ->setParameters(
+                array(
+                    'token' => $token,
+                    'otp' => strtolower($otp) // yes, case-insensitive was requested
+                )
+            )
+            ->getOneOrNullResult();
+    }
+
+    public function findUnvettedTokens(Organisation $organisation)
+    {
+        $results = $this
+            ->createQueryBuilder('t')
+            ->select('t')
+            ->innerJoin('t.owner', 'u')
+            ->where('u.organisation = :organisation')
+            ->andWhere('t.registrationCodeConfirmedAt IS NULL')
+            ->andWhere('t.requestedAt IS NOT NULL')
+            ->andWhere('t.registrationCode IS NOT NULL')
+            ->setParameter('organisation', $organisation)
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($results);
+    }
+
+    public function findVettedTokens(Organisation $organisation)
+    {
+        $results = $this
+            ->createQueryBuilder('t')
+            ->select('t')
+            ->innerJoin('t.owner', 'u')
+            ->where('u.organisation = :organisation')
+            ->andWhere('t.approvedAt IS NOT NULL')
+            ->andWhere('t.approvedBy IS NOT NULL')
+            ->setParameter('organisation', $organisation)
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($results);
     }
 }

@@ -1,6 +1,7 @@
 {% extends 'MopaBootstrapBundle::base.html.twig' %}
+{% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
 
-{% block title %}{% endblock title %}
+{% block title %}SuAAS{% endblock title %}
 {% block head_style %}
     {% stylesheets
         '@SURFnetSuAASSelfServiceBundle/Resources/public/less/base.less'
@@ -14,52 +15,41 @@
     {#{{ mopa_bootstrap_navbar('frontendNavbar') }}#}
     {% endblock navbar %}
 
-    {% block container %}
-    {% block container_div_start %}<div class="container-fluid">{% endblock container_div_start %}
         {% block header %}
         {% endblock header %}
 
-        {% block content_div_start %}<div class="content">{% endblock content_div_start %}
             {% block page_header %}
-            {#<div class="page-header">#}
-                  {#<h1>{% block headline %}Mopa Bootstrap Bundle{% endblock headline %}</h1>#}
-            {#</div>#}
+            {#<div class="page-header"></div>#}
             {% endblock page_header %}
 
-            {#{% block flashes %}#}
-            {#{% if app.session.flashbag.peekAll|length > 0 %}#}
-            {#<div class="row-fluid">#}
-                {#<div id="flash" class="span12">#}
-                {#&#123;&#35;{{ session_flash() }}&#35;&#125;#}
-                {#</div>#}
-            {#</div>#}
-            {#{% endif %}#}
-            {#{% endblock flashes %}#}
+            {% block flashes %}
+            {% if app.session.flashbag.peekAll|length > 0 %}
+            <div class="row-fluid">
+                <div id="flash" class="span12">
+                {{ session_flash() }}
+                </div>
+            </div>
+            {% endif %}
+            {% endblock flashes %}
 
             {% block content_row %}
-            {#<div class="row-fluid">#}
                 {% block content %}
-                {#<div class="span9">#}
-                    {#{% block content_content %}#}
-                    {#<strong>Hier könnte Ihre Werbung stehen ... </strong>#}
-                    {#{% endblock content_content %}#}
-                {#</div>#}
-                {#<div class="span3">#}
-                    {#{% block content_sidebar %}#}
-                    {#<h2>Sidebar</h2>#}
-                    {#{% endblock content_sidebar %}#}
-                {#</div>#}
                 {% endblock content %}
-            {#</div>#}
             {% endblock content_row %}
-        {% block content_div_end %}</div>{% endblock content_div_end %}
-        {#<footer>#}
-            {#&#123;&#35;{% block footer %}&#35;&#125;#}
-            {#&#123;&#35;<p>&copy; <a href="http://www.mohrenweiserpartner.de" target="_blank">Mohrenweiser & Partner</a> 2011-2013</p>&#35;&#125;#}
-            {#&#123;&#35;{% endblock footer %}&#35;&#125;#}
-        {#</footer>#}
-    {#{% block container_div_end %}</div><!-- /container -->{% endblock container_div_end %}#}
-    {% endblock container %}
+
+            {% block footer %}
+                <div class="row-fluid">
+                    <div class="span8 offset2">
+                        <hr>
+                        <ul class="nav nav-pills">
+                            <li><a href="{{ path("landing") }}">Start Page</a></li>
+                            <li><a href="{{ path('login', {"flow" : "RAC"}) }}">RA-Management</a></li>
+                            <li><a href="{{ path("logout") }}">Log out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            {% endblock footer %}
+
     {% block foot_script %}
        {#&#123;&#35; To only use a subset or add more js overwrite and copy paste this block#}
        {#To speed up page loads save a copy of jQuery in your project and override this block to include the correct path#}

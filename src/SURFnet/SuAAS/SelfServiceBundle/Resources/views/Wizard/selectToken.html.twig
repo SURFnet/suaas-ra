@@ -1,6 +1,6 @@
 {% extends '::base.html.twig' %}
 
-{% block title %}SuAAS - Self Service - Select Token{% endblock title %}
+{% block title %}{{ parent() }} - Self Service - Select Token{% endblock title %}
 
 {% block content %}
     <div class="row-fluid">
@@ -12,7 +12,7 @@
                 {% endimage %}
             </div>
             {{ wizardHeader(1) }}
-            <h3>Welcome {{ user.displayName }}</h3>
+            <h3>Welcome {{ user.name }}</h3>
         {% if tokenWarning == true %}
             <div class="alert alert-error">
                 <p><strong>TESTING PURPOSE ONLY</strong></p>

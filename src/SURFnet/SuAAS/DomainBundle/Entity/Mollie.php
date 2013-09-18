@@ -25,6 +25,11 @@ class Mollie extends AuthenticationMethod
      */
     private $phoneNumber;
 
+    public function getType()
+    {
+        return 'SMS';
+    }
+
     public function create($phoneNumber, User $user)
     {
         if ($this->id) {

@@ -5,23 +5,35 @@ namespace SURFnet\OneLoginBridgeBundle\SAML;
 use Doctrine\Common\Collections\ArrayCollection;
 use SURFnet\OneLoginBridgeBundle\SAML\Attribute\AttributeInterface;
 
+/**
+ * Class Attributes
+ * @package SURFnet\OneLoginBridgeBundle\SAML
+ *
+ * Essentially a bag of possible attributes.
+ *
+ * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
+ */
 class Attributes
 {
-    const ATTR_UID = 'uid';
-    const ATTR_SCHACORG = 'schacHomeOrganisation';
-    const ATTR_NAME = 'displayName';
-    const ATTR_EMAIL = 'mail';
-
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
     private $attributes;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->attributes = new ArrayCollection();
     }
 
+    /**
+     * Called by the Service Container.
+     *
+     * @param AttributeInterface $attribute
+     * @throws \RuntimeException
+     */
     public function addAttribute(AttributeInterface $attribute)
     {
         if ($this->attributes->contains($attribute)) {
@@ -35,13 +47,19 @@ class Attributes
         $this->attributes[$attribute->getName()] = $attribute;
     }
 
+    /**
+     * Allows to test whether or not a particular attribute exists
+     *
+     * @param $name
+     * @return bool
+     */
     public function hasAttribute($name)
     {
         return $this->attributes->containsKey($name);
     }
 
     /**
-     *
+     * Retrieve an attribute if possible.
      *
      * @param string $name
      * @return AttributeInterface

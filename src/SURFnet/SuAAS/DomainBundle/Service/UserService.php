@@ -2,9 +2,12 @@
 
 namespace SURFnet\SuAAS\DomainBundle\Service;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use SURFnet\SuAAS\DomainBundle\Command\PromoteRACommand;
 use SURFnet\SuAAS\DomainBundle\Entity\Organisation;
-use SURFnet\SuAAS\DomainBundle\Entity\User;
+use SURFnet\SuAAS\DomainBundle\Entity\RegistrationAuthority;
 use SURFnet\SuAAS\DomainBundle\Entity\SAMLIdentity;
+use SURFnet\SuAAS\DomainBundle\Entity\User;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -13,6 +16,38 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class UserService extends ORMService implements UserProviderInterface
 {
     protected $rootEntityClass = 'SURFnet\SuAAS\DomainBundle\Entity\User';
+
+    public function findAll()
+    {
+        $users = new ArrayCollection($this->getRepository()->findAll());
+
+        return $users->map(function(User $user){
+            return $user->getView();
+        });
+    }
+
+    public function findRAByOrganisation(Organisation $organisation)
+    {
+        return $this
+            ->getRepository()
+            ->findRAForOrganisation($organisation)
+            ->map(function(User $user){
+                return $user->getRegistrationAuthorityView();
+            });
+    }
+
+    public function promoteRA(User $user, PromoteRACommand $command)
+    {
+        $ra = new RegistrationAuthority();
+        $ra->create($user, $command);
+
+        $this->persist($ra)->flush();
+    }
+
+    public function revokeRA(User $user)
+    {
+        $this->getRepository()->removeRAByUser($user);
+    }
 
     public function loadUserByUsername($username)
     {
@@ -36,12 +71,7 @@ class UserService extends ORMService implements UserProviderInterface
 
             $organisation = $this->resolveOrganisation($identity->getSchacHomeOrganisation());
             $user = new User();
-            $user->create(
-                $identity->getNameId(),
-                $organisation,
-                $identity->getDisplayName(),
-                $identity->getEmail()
-            );
+            $user->create($identity, $organisation);
 
             $this->persist($user)->flush();
         }

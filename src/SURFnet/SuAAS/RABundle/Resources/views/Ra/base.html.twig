@@ -1,0 +1,32 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}{{ parent() }} - Management{% endblock title %}
+
+{% block content %}
+    <div class="row-fluid">
+        <div class="span8 offset2">
+            <div class="header clearfix">
+                <h1 class="pull-left">User Management</h1>
+                {% image '@SURFnetSuAASSelfServiceBundle/Resources/public/images/SURFnet_logo.jpg' %}
+                    <img src="{{ asset_url }}" class="pull-right" alt="SURFnet Logo"/>
+                {% endimage %}
+            </div>
+            {% block menu %}
+            <div>
+                <ul class="nav nav-tabs">
+                    <li class="{% block reg_active %}active{% endblock %}">
+                        <a href="{{ path('management_user_overview') }}">Registration</a>
+                    </li>
+                    <li class="{% block dereg_active %}{% endblock %}">
+                        <a href="{{ path('management_deregistration') }}" title="Disabled in the Pilot">De-Registration</a>
+                    </li>
+                    <li class="disabled">
+                        <a href="#" title="Disabled in the Pilot">Settings</a>
+                    </li>
+                </ul>
+            </div>
+            {% endblock %}
+            {% block page_content %}{% endblock page_content %}
+        </div>
+    </div>
+{% endblock %}
