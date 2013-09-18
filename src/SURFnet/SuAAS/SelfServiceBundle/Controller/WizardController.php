@@ -135,7 +135,7 @@ class WizardController extends Controller
         $this->get('suaas.mailer')->sendMail($mail);
 
         return array(
-            'user' => $this->get('security.context')->getToken()->getUser(),
+            'user' => $user,
             'token' => $token
         );
     }

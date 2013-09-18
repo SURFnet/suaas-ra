@@ -109,6 +109,11 @@ class User implements UserInterface, EquatableInterface, \Serializable
         return $this->registrationAuthority->getView($view);
     }
 
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
+
     public function getUsername()
     {
         return $this->nameId;
