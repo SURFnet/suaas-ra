@@ -2,6 +2,7 @@
 
 namespace SURFnet\SuAAS\DomainBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 
@@ -13,6 +14,34 @@ use Doctrine\ORM\NoResultException;
  */
 class UserRepository extends EntityRepository
 {
+    public function findRAForOrganisation(Organisation $organisation)
+    {
+        $ras = $this->createQueryBuilder('u')
+            ->innerJoin('u.registrationAuthority', 'ra')
+            ->where('u.organisation = :organisation')
+            ->setParameter('organisation', $organisation)
+            ->getQuery()
+            ->getResult();
+
+        return new ArrayCollection($ras);
+    }
+
+    public function removeRAByUSer(User $user)
+    {
+        $dql = "
+            DELETE FROM
+                SURFnetSuAASDomainBundle:RegistrationAuthority ra
+            WHERE
+                ra.user = :user
+        ";
+
+        $this
+            ->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter('user', $user)
+            ->execute();
+    }
+
     /**
      *
      *
@@ -21,16 +50,13 @@ class UserRepository extends EntityRepository
      */
     public function findByUsername($username)
     {
-        $dql = $this
+        return $this
             ->createQueryBuilder('u')
             ->select('u')
             ->where('u.nameId = :nameId')
             ->setParameter('nameId', $username)
             ->getQuery()
+            ->getOneOrNullResult()
         ;
-
-        $user = $dql->getOneOrNullResult();
-
-        return $user;
     }
 }

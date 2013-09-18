@@ -24,7 +24,8 @@
         "twbs/bootstrap": "2.3.2",
         "mopa/bootstrap-bundle": "dev-master",
         "fortawesome/font-awesome": "3.2.*",
-        "onelogin/php-saml": "dev-master"
+        "onelogin/php-saml": "dev-master",
+        "guzzle/guzzle": "~3.7"
     },
     "scripts": {
         "post-install-cmd": [

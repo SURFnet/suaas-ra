@@ -19,6 +19,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class SamlController extends Controller
 {
     /**
+     * Redirects to the configured URL in order to start the SAML authentication
+     * sequence.
+     *
      * @Route("/redirect", name="saml_login")
      *
      * @return Response
@@ -31,6 +34,8 @@ class SamlController extends Controller
     }
 
     /**
+     * Supplies the metadata required for IdP's to identify this SP.
+     *
      * @Route("/metadata")
      *
      * @return Response
@@ -43,6 +48,10 @@ class SamlController extends Controller
     }
 
     /**
+     * Return point for the IdP when the user has successfully authenticated.
+     * Redirects the user to the URL the user was aiming for before starting
+     * the authentication sequence.
+     *
      * @Route("/consume", name="saml_consume")
      *
      * @return Response

@@ -14,4 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Tiqr extends AuthenticationMethod
 {
+    public function getType()
+    {
+        return 'Tiqr';
+    }
 }

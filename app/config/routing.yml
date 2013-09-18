@@ -4,8 +4,9 @@ surfnet_suaas_self_service:
     prefix:   /
 
 surfnet_suaas_ra:
-    resource: "@SURFnetSuAASRABundle/Resources/config/routing.yml"
-    prefix:   /management
+    resource: "@SURFnetSuAASRABundle/Controller/"
+    type: annotation
+    prefix:   /
 
 surfnet_onelogin_saml:
     resource: "@SURFnetOneLoginBridgeBundle/Controller/"
