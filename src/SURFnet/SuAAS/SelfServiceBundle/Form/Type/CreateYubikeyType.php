@@ -17,6 +17,7 @@ class CreateYubikeyType extends AbstractType
                 array(
                     'required' => true,
                     'label' => 'Yubikey Password:',
+                    'help_block'  => '<strong>Note:</strong> Using your yubikey to enter a password will submit the form for you.',
                     'widget_addon' => array(
                         'type' => 'prepend',
                         'icon' => 'key'
@@ -26,8 +27,7 @@ class CreateYubikeyType extends AbstractType
                         'placeholder' => 'enter one-time-password',
                     )
                 )
-            )
-            ->add('Verify', 'submit');
+            );
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

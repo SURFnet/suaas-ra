@@ -191,7 +191,7 @@ class RAController extends Controller
                 );
             }
 
-            $form->get('password')->addError(new FormError('Invalid Yubikey OTP'));
+            $form->get('otp')->addError(new FormError('Invalid Yubikey OTP'));
         }
 
         return array(
