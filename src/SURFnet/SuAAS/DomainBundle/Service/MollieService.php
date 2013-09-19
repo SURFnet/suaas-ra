@@ -34,60 +34,6 @@ class MollieService extends AuthenticationMethodService
         return $token;
     }
 
-    /**
-     *
-     *
-     * @param User $user
-     * @return Mollie
-     */
-    public function findTokenForUser(User $user)
-    {
-        return $this->findTokenOfTypeForUser('Mollie', $user);
-    }
-
-    public function createActivationEmail(User $user, Mollie $token)
-    {
-        $userView = $user->getView();
-
-        $command = new SendConfirmationCommand();
-        $command->recepient = $userView->email;
-
-        $code = $token->generateEmailToken($command);
-        $this->persist($token)->flush();
-
-        $command->parameters = array(
-            'user' => $user,
-            'code' => $code,
-            'token_description' => 'SMS One-Time-Password service'
-        );
-
-        $command->template = 'SURFnetSuAASSelfServiceBundle:Email:confirmationEmail.html.twig';
-        $command->subject = 'Activate SMS One-Time-Password';
-
-        return $command;
-    }
-
-    public function createRegistrationMail(User $user, Mollie $token)
-    {
-        $userView = $user->getView();
-
-        $command = new SendConfirmationCommand();
-        $command->recepient = $userView->email;
-        $code = $token->generateRegistrationCode();
-        $this->persist($token)->flush();
-
-        $command->parameters = array(
-            'user' => $user,
-            'code' => $code,
-            'token_description' => 'SMS One-Time-Password'
-        );
-
-        $command->template = 'SURFnetSuAASSelfServiceBundle:Email:registrationEmail.html.twig';
-        $command->subject = 'Registration Code SMS One-Time-Password';
-
-        return $command;
-    }
-
     public function hasPendingOTP(Mollie $token)
     {
         return $this->getRepository()->hasPendingMollieOTP($token);

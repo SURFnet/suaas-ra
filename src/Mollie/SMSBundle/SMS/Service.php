@@ -79,7 +79,7 @@ class Service
 //      only if you have access to the DB:
 //      uncomment the following line to NOT send
 //      an SMS, the rest will work as usual
-//return true;
+return true;
 
         $response = $request->send();
 

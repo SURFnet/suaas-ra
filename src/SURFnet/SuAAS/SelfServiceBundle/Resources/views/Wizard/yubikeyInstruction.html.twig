@@ -1,0 +1,19 @@
+{% extends "SURFnetSuAASSelfServiceBundle:Wizard:linkToken.html.twig" %}
+
+{% block title %}{{ parent() }} - SMS{% endblock title %}
+
+{% block block_contents %}
+    <p>
+        To link your Yubikey, please execute the following steps.
+    </p>
+    <ol>
+        <li>Connect <em>your</em> Yubikey with the computer</li>
+        <li>Please ensure that the form field below has the focus</li>
+        <li>Press the button on your Yubikey once to enter an OTP in the field below</li>
+    </ol>
+    <p>
+        <form action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" method="post" class="form-horizontal offset-top" {{ form_enctype(form) }}>
+            {{ form_rest(form) }}
+        </form>
+    </p>
+{% endblock %}
