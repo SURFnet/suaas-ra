@@ -4,6 +4,7 @@ namespace SURFnet\SuAAS\DomainBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use SURFnet\SuAAS\DomainBundle\Command\CreateYubikeyCommand;
+use SURFnet\SuAAS\DomainBundle\Command\VerifyYubikeyCommand;
 
 /**
  * Class YubiKey
@@ -25,6 +26,12 @@ class YubiKey extends AuthenticationMethod
     public function getType()
     {
         return 'Yubikey';
+    }
+
+    public function yubikeyMatches(VerifyYubikeyCommand $command)
+    {
+        $tokenId = substr($command->otp, 0, -32);
+        return $this->yubikeyId === $tokenId;
     }
 
     public function create(CreateYubikeyCommand $command)

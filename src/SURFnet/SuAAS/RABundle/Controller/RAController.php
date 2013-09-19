@@ -9,11 +9,13 @@ use SURFnet\SuAAS\DomainBundle\Command\PromoteRACommand;
 use SURFnet\SuAAS\DomainBundle\Command\VerifyIdentityCommand;
 use SURFnet\SuAAS\DomainBundle\Command\VerifyMollieTokenCommand;
 use SURFnet\SuAAS\DomainBundle\Command\VerifyRegistrationCodeCommand;
+use SURFnet\SuAAS\DomainBundle\Command\VerifyYubikeyCommand;
 use SURFnet\SuAAS\DomainBundle\Entity\AuthenticationMethod;
 use SURFnet\SuAAS\DomainBundle\Entity\User;
 use SURFnet\SuAAS\RABundle\Form\Type\CreateRAType;
 use SURFnet\SuAAS\RABundle\Form\Type\VerifyIdentityType;
 use SURFnet\SuAAS\RABundle\Form\Type\VerifyRegistrationCodeType;
+use SURFnet\SuAAS\RABundle\Form\Type\VerifyYubikeyType;
 use SURFnet\SuAAS\SelfServiceBundle\Form\Type\VerifyMollieTokenType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
@@ -159,7 +161,48 @@ class RAController extends Controller
 
     /**
      * @Route(
-     *      "/registration/confirm-token/{token}",
+     *      "/registration/confirm-token/yubikey/{token}",
+     *      name="management_confirm_Yubikey_token",
+     *      requirements={"token": "\d+"}
+     * )
+     * @Template()
+     */
+    public function confirmYubikeyAction(AuthenticationMethod $token)
+    {
+        if (!$token->canConfirmToken()) {
+            return $this->error('This token cannot be confirmed yet.');
+        }
+
+        $service = $this->get('suaas.service.yubikey');
+        $form = $this->createForm(
+            new VerifyYubikeyType(),
+            new VerifyYubikeyCommand()
+        );
+
+        $form->handleRequest($this->getRequest());
+
+        if ($form->isValid()) {
+            if ($service->confirmToken($token, $form->getData())) {
+                return $this->redirect(
+                    $this->generateUrl(
+                        'management_confirm_identity',
+                        array('token' => $token->getView()->tokenId)
+                    )
+                );
+            }
+
+            $form->get('password')->addError(new FormError('Invalid Yubikey OTP'));
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'tokenType' => $token->getType()
+        );
+    }
+
+    /**
+     * @Route(
+     *      "/registration/confirm-token/SMS/{token}",
      *      name="management_confirm_SMS_token",
      *      requirements={"token": "\d+"}
      * )

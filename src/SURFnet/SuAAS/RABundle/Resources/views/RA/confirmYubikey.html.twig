@@ -1,0 +1,14 @@
+{% extends 'SURFnetSuAASRABundle:RA:confirmToken.html.twig' %}
+
+{% block title %}{{ parent() }} - Confirm Token{% endblock %}
+
+{% block message %}
+    In order to confirm you are the owner of the registered Yubikey, please enter
+    a one-time-password with your Yubikey.
+{% endblock %}
+
+{% block additional %}
+    <form action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" method="post" class="form-horizontal offset-top" {{ form_enctype(form) }}>
+        {{ form_rest(form) }}
+    </form>
+{% endblock %}
