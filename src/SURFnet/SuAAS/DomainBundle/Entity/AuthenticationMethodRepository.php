@@ -26,6 +26,15 @@ class AuthenticationMethodRepository extends EntityRepository
             ->getOneOrNullResult();
     }
 
+    public function findTokenForUser(User $user)
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.owner = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function getTokenCountForUser(User $user)
     {
         return $this->createQueryBuilder('t')

@@ -1,0 +1,14 @@
+parameters:
+    yubikey.service.api.class:      Yubico\YubikeyBundle\Service\ApiService
+    yubikey.api.client.class:       Guzzle\Http\Client
+
+services:
+    yubikey.api.client:
+        class: %yubikey.api.client.class%
+
+    yubikey.service.api:
+        class: %yubikey.service.api.class%
+        arguments:
+            - @yubikey.api.client
+            - %yubikey.credentials.client%
+            - %yubikey.credentials.secret%

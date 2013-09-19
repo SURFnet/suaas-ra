@@ -23,9 +23,11 @@
                 <form action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" method="post" class="form-horizontal offset-top" {{ form_enctype(form) }}>
                         {{ form_rest(form) }}
                     <div class="row-fluid">
-                        <button type="submit" class="btn btn-success pull-right"><i class="icon-ok"></i> Approve Request</button>
-                        <a type="reset" class="btn btn-danger" href="{{ path("management_decline_request", {"token": token.tokenId}) }}"><i class="icon-remove"></i> Decline Request</a>
-                        <p class="muted span6 button-note">
+                        <p>
+                            <button type="submit" class="btn btn-success pull-right"><i class="icon-ok"></i> Approve Request</button>
+                            <a type="reset" class="btn btn-danger" href="{{ path("management_decline_request", {"token": token.tokenId}) }}"><i class="icon-remove"></i> Decline Request</a>
+                        </p>
+                        <p class="muted span6">
                             <strong>PILOT ONLY:</strong> clicking on "<em>Decline Request</em>" will reset the state of the token such
                             that the Registration Authority flow can be restarted.
                         </p>

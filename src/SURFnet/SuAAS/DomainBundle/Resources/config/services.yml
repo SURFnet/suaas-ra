@@ -5,6 +5,7 @@ parameters:
     suaas.service.user.class:                       SURFnet\SuAAS\DomainBundle\Service\UserService
     suaas.service.authentication_method.class:      SURFnet\SuAAS\DomainBundle\Service\AuthenticationMethodService
     suaas.service.mollie.class:                     SURFnet\SuAAS\DomainBundle\Service\MollieService
+    suaas.service.yubikey.class:                    SURFnet\SuAAS\DomainBundle\Service\YubikeyService
 
 services:
     suaas.service.orm:
@@ -36,3 +37,9 @@ services:
         parent: suaas.service.authentication_method
         calls:
             - [setSmsService, ["@mollie_sms.service"]]
+
+    suaas.service.yubikey:
+        class: %suaas.service.yubikey.class%
+        parent: suaas.service.authentication_method
+        calls:
+            - [setApiService, ["@yubikey.service.api"]]

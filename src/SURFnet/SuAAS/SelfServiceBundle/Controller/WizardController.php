@@ -5,9 +5,12 @@ namespace SURFnet\SuAAS\SelfServiceBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use SURFnet\SuAAS\DomainBundle\Command\CreateMollieCommand;
+use SURFnet\SuAAS\DomainBundle\Command\CreateYubikeyCommand;
 use SURFnet\SuAAS\DomainBundle\Command\VerifyMollieTokenCommand;
 use SURFnet\SuAAS\DomainBundle\Entity\Mollie;
+use SURFnet\SuAAS\DomainBundle\Entity\YubiKey;
 use SURFnet\SuAAS\SelfServiceBundle\Form\Type\CreateMollieType;
+use SURFnet\SuAAS\SelfServiceBundle\Form\Type\CreateYubikeyType;
 use SURFnet\SuAAS\SelfServiceBundle\Form\Type\VerifyMollieTokenType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
@@ -120,15 +123,46 @@ class WizardController extends Controller
     }
 
     /**
+     * @Route("/link-token/yubikey/instruction", name="self_service_link_yubikey_instr")
+     * @Template("SURFnetSuAASSelfServiceBundle:Wizard:yubikeyInstruction.html.twig")
+     */
+    public function linkYubikeyAction()
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+        $form = $this->createForm(
+            new CreateYubikeyType(),
+            new CreateYubikeyCommand(array('owner' => $user))
+        );
+
+        $form->handleRequest($this->getRequest());
+
+        if ($form->isValid()) {
+            if ($this->get('suaas.service.yubikey')->createToken($form->getData())) {
+                return $this->redirect($this->generateUrl('self_service_confirm'));
+            }
+
+            // should be done in a custom validator
+            $form->get('otp')->addError(new FormError('Invalid password, please try again'));
+        }
+
+        return array(
+            'user' => $user->getView(),
+            'tokenType' => (new YubiKey())->getType(),
+            'tokenExtended' => 'a Yubikey',
+            'form' => $form->createView(),
+        );
+    }
+
+    /**
      * @Route("/confirm-token", name="self_service_confirm")
      * @Template()
      *
      * @return array
      */
-    public function smsConfirmAction()
+    public function confirmAction()
     {
         $user = $this->get('security.context')->getToken()->getUser();
-        $service = $this->get('suaas.service.mollie');
+        $service = $this->get('suaas.service.authentication_method');
         $token = $service->findTokenForUser($user);
 
         $mail = $service->createActivationEmail($user, $token);
@@ -136,36 +170,7 @@ class WizardController extends Controller
 
         return array(
             'user' => $user,
-            'token' => $token
-        );
-    }
-
-    /**
-     * @Route("/registration-instruction", name="self_service_registration_instruction")
-     * @Method("GET")
-     * @Template()
-     *
-     * @return array
-     */
-    public function smsRegisterTokenAction()
-    {
-        $service = $this->get('suaas.service.mollie');
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        $token = $service->findTokenForUser($user);
-        if ($token->hasRegistrationCode()) {
-            return $this->error('The token already has a registration code attached');
-        }
-
-        $mail = $service->createRegistrationMail($user, $token);
-        // quick hack
-        $code = $mail->parameters['code'];
-        $this->get('suaas.mailer')->sendMail($mail);
-
-        return array(
-            'ras' => $this->get('suaas.service.user')->findRAByOrganisation($user->getOrganisation()),
-            'user' => $user->getView(),
-            'code' => $code
+            'token' => $token->getView()
         );
     }
 
@@ -193,7 +198,6 @@ class WizardController extends Controller
         }
 
         $service = $this->get('suaas.service.authentication_method');
-
         if (!$service->confirmRegistration($user, $registrationCode)) {
             return $this->error('The registration URL you tried to use is invalid');
         }
@@ -202,6 +206,38 @@ class WizardController extends Controller
     }
 
     /**
+     * @Route("/registration-instruction", name="self_service_registration_instruction")
+     * @Method("GET")
+     * @Template()
+     *
+     * @return array
+     */
+    public function registerTokenAction()
+    {
+        $service = $this->get('suaas.service.authentication_method');
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $token = $service->findTokenForUser($user);
+        if ($token->hasRegistrationCode()) {
+            return $this->error('The token already has a registration code attached');
+        }
+
+        $mail = $service->createRegistrationMail($user, $token);
+        // quick hack
+        $code = $mail->parameters['code'];
+        $this->get('suaas.mailer')->sendMail($mail);
+
+        return array(
+            'ras' => $this->get('suaas.service.user')->findRAByOrganisation($user->getOrganisation()),
+            'user' => $user->getView(),
+            'code' => $code,
+            'token' => $token->getView()
+        );
+    }
+
+    /**
+     * [!!!] Solely for Pilot
+     *
      * @Route("/clear-tokens", name="self_service_clear_tokens")
      *
      * @return Response
