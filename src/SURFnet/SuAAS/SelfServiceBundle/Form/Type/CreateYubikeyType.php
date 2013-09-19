@@ -13,7 +13,7 @@ class CreateYubikeyType extends AbstractType
         $builder
             ->add(
                 'otp',
-                'password',
+                'text',
                 array(
                     'required' => true,
                     'label' => 'Yubikey Password:',
