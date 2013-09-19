@@ -15,13 +15,17 @@
             <div class="row-fluid">
                 <div class="span8">
                     <div class="alert alert-success">
-                        The SMS One-Time-Password for {{ token.readablePhoneNumber }} has been added to your account <strong>{{ user.email }}</strong>.<br />
+                        {% if token.tokenType == 'SMS' %}
+                        The SMS One-Time-Password has been added to your account with email-address <strong>{{ user.email }}</strong>.<br />
+                        {% elseif token.tokenType == 'Yubikey' %}
+                        The Yubikey has been added to your account with email-address <strong>{{ user.email }}</strong>.<br />
+                        {% endif %}
                         <br />
                         Please check your email for further instructions on how to activate your token.
                     </div>
                 </div>
                 <div class="span4">
-                    {{ tokenThumbnails(false, {1:'SMS'}) }}
+                    {{ tokenThumbnails(false, {1:token.tokenType}) }}
                 </div>
             </div>
         </div>

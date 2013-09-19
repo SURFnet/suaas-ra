@@ -3,7 +3,7 @@
 {% block content %}
     Dear {{ user.displayName }},<br />
     <br />
-    Before you can start using the {{ token_description }} it needs to be activated, please click on the link below to activate your token. If you cannot click on the link, please copy it and paste it in the address bar of your browser.<br />
+    Before you can start using your token it needs to be activated, please click on the link below to activate your token. If you cannot click on the link, please copy it and paste it in the address bar of your browser.<br />
     <br />
     <a href="{{ url("self_service_registration") }}?c={{ code }}&n={{ user.userName }}" title="Activate">{{ url("self_service_registration") }}?c={{ code }}&n={{ user.userName }}</a>
 {% endblock %}
