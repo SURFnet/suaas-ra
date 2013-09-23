@@ -77,9 +77,11 @@ class WizardController extends Controller
             return $this->redirect($this->generateUrl('self_service_link_sms_verify'));
         }
 
+        // php 5.3 workaround
+        $type = new Mollie();
         return array(
             'user' => $user->getView(),
-            'tokenType' => (new Mollie())->getType(),
+            'tokenType' => $type->getType(),
             'tokenExtended' => 'an SMS based one-time-password',
             'form' => $form->createView(),
         );
