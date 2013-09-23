@@ -13,10 +13,26 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * Class UserService
+ * @package SURFnet\SuAAS\DomainBundle\Service
+ *
+ * Service for the users
+ *
+ * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
+ */
 class UserService extends ORMService implements UserProviderInterface
 {
+    /**
+     * @var string
+     */
     protected $rootEntityClass = 'SURFnet\SuAAS\DomainBundle\Entity\User';
 
+    /**
+     * find all users
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
     public function findAll()
     {
         $users = new ArrayCollection($this->getRepository()->findAll());
@@ -26,6 +42,12 @@ class UserService extends ORMService implements UserProviderInterface
         });
     }
 
+    /**
+     * Find the User(s) marked as RA belonging to the given organisation
+     *
+     * @param Organisation $organisation
+     * @return ArrayCollection
+     */
     public function findRAByOrganisation(Organisation $organisation)
     {
         return $this
@@ -36,6 +58,12 @@ class UserService extends ORMService implements UserProviderInterface
             });
     }
 
+    /**
+     * Promote a User to RA
+     *
+     * @param User             $user
+     * @param PromoteRACommand $command
+     */
     public function promoteRA(User $user, PromoteRACommand $command)
     {
         $ra = new RegistrationAuthority();
@@ -44,11 +72,23 @@ class UserService extends ORMService implements UserProviderInterface
         $this->persist($ra)->flush();
     }
 
+    /**
+     * Demote a User from RA-position
+     *
+     * @param User $user
+     */
     public function revokeRA(User $user)
     {
         $this->getRepository()->removeRAByUser($user);
     }
 
+    /**
+     * UserProviderInterface requirement
+     *
+     * @param string $username
+     * @return User
+     * @throws UsernameNotFoundException
+     */
     public function loadUserByUsername($username)
     {
         $user = $this->getRepository()->findByUsername($username);
@@ -63,6 +103,12 @@ class UserService extends ORMService implements UserProviderInterface
         return $user;
     }
 
+    /**
+     * Resolve a user based on the SAMLIdentity
+     *
+     * @param SAMLIdentity $identity
+     * @return User
+     */
     public function resolveBySamlIdentity(SAMLIdentity $identity)
     {
         $user = $this->getRepository()->findByUsername($identity->getNameId());
@@ -79,6 +125,12 @@ class UserService extends ORMService implements UserProviderInterface
         return $user;
     }
 
+    /**
+     * Resolve an organisation base on the name given
+     *
+     * @param $organisationName
+     * @return Organisation
+     */
     public function resolveOrganisation($organisationName)
     {
         $organisationRepository = $this->doctrine->getRepository(
@@ -98,6 +150,8 @@ class UserService extends ORMService implements UserProviderInterface
     }
 
     /**
+     * UserProviderInterface requirement
+     *
      * @param  UserInterface $user
      * @return UserInterface
      * @throws UnsupportedUserException
@@ -113,6 +167,8 @@ class UserService extends ORMService implements UserProviderInterface
     }
 
     /**
+     * UserProviderInterface requirement
+     *
      * @param  string $class
      * @return bool
      */

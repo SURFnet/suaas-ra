@@ -10,6 +10,14 @@ use SURFnet\OneLoginBridgeBundle\SAML\Attribute\Surname;
 use SURFnet\OneLoginBridgeBundle\Service\ResponseAdapter;
 use SURFnet\SuAAS\DomainBundle\Entity\SAMLIdentity;
 
+/**
+ * Class IdentityResolver
+ * @package SURFnet\SuAAS\DomainBundle\Service\SAML
+ *
+ * IdentityResolver, resolves a response to a SAMLIdentity
+ *
+ * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
+ */
 class IdentityResolver
 {
     public function parse(ResponseAdapter $response)

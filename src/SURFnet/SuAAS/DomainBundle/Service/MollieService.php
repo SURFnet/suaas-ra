@@ -6,12 +6,18 @@ use Mollie\SMSBundle\SMS\Message;
 use Mollie\SMSBundle\SMS\Service;
 use SURFnet\SuAAS\DomainBundle\Command\CreateMollieCommand;
 use SURFnet\SuAAS\DomainBundle\Command\CreateMollieOTPCommand;
-use SURFnet\SuAAS\DomainBundle\Command\Mail\SendConfirmationCommand;
 use SURFnet\SuAAS\DomainBundle\Command\VerifyMollieTokenCommand;
 use SURFnet\SuAAS\DomainBundle\Entity\Mollie;
 use SURFnet\SuAAS\DomainBundle\Entity\MollieOTP;
-use SURFnet\SuAAS\DomainBundle\Entity\User;
 
+/**
+ * Class MollieService
+ * @package SURFnet\SuAAS\DomainBundle\Service
+ *
+ * Mollie Service
+ *
+ * @author Daan van Renterghem <dvrenterghem@ibuildings.nl>
+ */
 class MollieService extends AuthenticationMethodService
 {
     /**
@@ -19,6 +25,12 @@ class MollieService extends AuthenticationMethodService
      */
     private $smsService;
 
+    /**
+     * Creates a new Mollie token
+     *
+     * @param CreateMollieCommand $command
+     * @return Mollie
+     */
     public function createMollieToken(CreateMollieCommand $command)
     {
         $token = new Mollie();
@@ -34,11 +46,24 @@ class MollieService extends AuthenticationMethodService
         return $token;
     }
 
+    /**
+     * Test if the token has a pending OTP (SMS sent, code not yet used)
+     *
+     * @param Mollie $token
+     * @return bool
+     */
     public function hasPendingOTP(Mollie $token)
     {
         return $this->getRepository()->hasPendingMollieOTP($token);
     }
 
+    /**
+     * Verify the mollie token
+     *
+     * @param Mollie                   $token
+     * @param VerifyMollieTokenCommand $command
+     * @return bool
+     */
     public function verifyToken(Mollie $token, VerifyMollieTokenCommand $command)
     {
         $otp = $this->getRepository()->findMollieOTP($token, $command->password);
@@ -54,6 +79,13 @@ class MollieService extends AuthenticationMethodService
         return true;
     }
 
+    /**
+     * Confirm a token
+     *
+     * @param Mollie                   $token
+     * @param VerifyMollieTokenCommand $command
+     * @return bool
+     */
     public function confirmToken(Mollie $token, VerifyMollieTokenCommand $command)
     {
         if (!$this->verifyToken($token, $command)) {
@@ -67,11 +99,22 @@ class MollieService extends AuthenticationMethodService
         return true;
     }
 
+    /**
+     * Setter used by the service container
+     *
+     * @param Service $service
+     */
     public function setSmsService(Service $service)
     {
         $this->smsService = $service;
     }
 
+    /**
+     * Send a new OTP for the token given
+     *
+     * @param Mollie $token
+     * @return CreateMollieOTPCommand
+     */
     public function sendOTP(Mollie $token)
     {
         $command = new CreateMollieOTPCommand(array('token' => $token));
@@ -84,6 +127,12 @@ class MollieService extends AuthenticationMethodService
         return $command;
     }
 
+    /**
+     * Helper method for sending of an SMS
+     *
+     * @param CreateMollieOTPCommand $command
+     * @throws \RuntimeException
+     */
     private function sendSMS(CreateMollieOTPCommand $command)
     {
         $message = new Message();
