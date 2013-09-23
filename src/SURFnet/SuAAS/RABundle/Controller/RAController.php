@@ -31,6 +31,9 @@ use Symfony\Component\Form\FormError;
 class RAController extends Controller
 {
     /**
+     * Overview - show all tokens-to-be-vetted for the organisations of the
+     * current RA
+     *
      * @Route("/registration", name="management_user_overview")
      * @Template()
      */
@@ -43,6 +46,8 @@ class RAController extends Controller
     }
 
     /**
+     * De-registration overview
+     *
      * @Route("/deregistration", name="management_deregistration")
      * @Template()
      */
@@ -55,6 +60,8 @@ class RAController extends Controller
     }
 
     /**
+     * Deregister (aka remove) a token
+     *
      * @Route(
      *      "/deregister/{token}",
      *      name="management_deregister_token",
@@ -82,7 +89,8 @@ class RAController extends Controller
     }
 
     /**
-     * [!!!] This action is for the Pilot only
+     * [!!!] PILOT ONLY
+     * make a User RA
      *
      * @Route("/ra/create/{user}", name="management_ra_create", requirements={"user":"\d+"})
      * @Template()
@@ -109,7 +117,8 @@ class RAController extends Controller
     }
 
     /**
-     * [!!!] This action is for the Pilot only
+     * [!!!] PILOT ONLY
+     * revokes RA rights from a user
      *
      * @Route("/ra/revoke/{user}", name="management_ra_revoke", requirements={"user":"\d+"})
      * @Template()
@@ -122,6 +131,8 @@ class RAController extends Controller
     }
 
     /**
+     * Enter registration code
+     *
      * @Route(
      *      "/registration/confirm-code/{token}",
      *      name="management_registration_code",
@@ -160,6 +171,8 @@ class RAController extends Controller
     }
 
     /**
+     * Confirm Yubikey action
+     *
      * @Route(
      *      "/registration/confirm-token/yubikey/{token}",
      *      name="management_confirm_Yubikey_token",
@@ -201,6 +214,8 @@ class RAController extends Controller
     }
 
     /**
+     * Confirm SMS token
+     *
      * @Route(
      *      "/registration/confirm-token/SMS/{token}",
      *      name="management_confirm_SMS_token",
@@ -246,6 +261,8 @@ class RAController extends Controller
     }
 
     /**
+     * Confirm the identity of the user
+     *
      * @Route(
      *      "/registration/confirm-identity/{token}",
      *      name="management_confirm_identity",
@@ -286,7 +303,9 @@ class RAController extends Controller
     }
 
     /**
-     * [!!!] Action solely for the pilot
+     * [!!!] PILOT ONLY
+     * decline registration of a token. Intent is to reset the token to the
+     * start of the ra-flow, for quick and easy retesting
      *
      * @Route(
      *      "/registration/decline/{token}",
@@ -302,6 +321,12 @@ class RAController extends Controller
         return $this->redirect($this->generateUrl('management_user_overview'));
     }
 
+    /**
+     * Shortcut for redirecting towards the error-action
+     *
+     * @param string $message
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     private function error($message)
     {
         $this->get('session')->set('error_message', $message);

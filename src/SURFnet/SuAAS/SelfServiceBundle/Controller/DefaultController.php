@@ -17,6 +17,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends Controller
 {
     /**
+     * Catch all for the root of the domain
+     *
      * @Route("/")
      */
     public function kickstartAction()
@@ -25,6 +27,9 @@ class DefaultController extends Controller
     }
 
     /**
+     * [!!!] PILOT ONLY
+     * Landing Page
+     *
      * @Route("/start", name="landing")
      * @Template()
      *
@@ -48,9 +53,11 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/login/{flow}", name="login")
+     * [!!!] PILOT ONLY
+     * Handles the redirect to the saml login, sets a simple return_url as the
+     * SAML one may be ignored by the IdP
      *
-     * PoC Code
+     * @Route("/login/{flow}", name="login")
      *
      * @return array
      */
@@ -79,6 +86,9 @@ class DefaultController extends Controller
     }
 
     /**
+     * Catch all custom error action - just makes life easier than creating a
+     * custom error page around the session.flashbag
+     *
      * @Route("/error", name="error")
      * @Template()
      *

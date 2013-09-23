@@ -29,6 +29,8 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 class WizardController extends Controller
 {
     /**
+     * Step 1. Select A Token
+     *
      * @Route("/select-token", name="self_service_selecttoken")
      * @Template()
      *
@@ -50,6 +52,8 @@ class WizardController extends Controller
     }
 
     /**
+     * Step 2. (SMS) Instruction page, enter your phonenumber
+     *
      * @Route("/link-token/sms/instruction", name="self_service_link_sms_instr")
      * @Template("SURFnetSuAASSelfServiceBundle:Wizard:smsInstruction.html.twig")
      *
@@ -82,10 +86,13 @@ class WizardController extends Controller
     }
 
     /**
+     * Step 2. (SMS) Verification page, enter the SMS-code
+     *
      * @Route("/link-token/sms/verification", name="self_service_link_sms_verify")
      * @Template("SURFnetSuAASSelfServiceBundle:Wizard:smsAuthentication.html.twig")
      *
      * @return array
+     * @throws BadRequestHttpException
      */
     public function smsAuthenticationAction()
     {
@@ -93,6 +100,8 @@ class WizardController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
         $token = $service->findTokenForUser($user);
 
+        // If you don't have a pending OTP, you're getting here through bookmark
+        // or something, rather than redirect - WRONG
         if (!$service->hasPendingOTP($token)) {
             throw new BadRequestHttpException(
                 "Invalid request - no pending sms OTP."
@@ -123,8 +132,12 @@ class WizardController extends Controller
     }
 
     /**
+     * Step 2. (Yubikey) OTP page
+     *
      * @Route("/link-token/yubikey/instruction", name="self_service_link_yubikey_instr")
      * @Template("SURFnetSuAASSelfServiceBundle:Wizard:yubikeyInstruction.html.twig")
+     *
+     * @return array
      */
     public function linkYubikeyAction()
     {
@@ -154,6 +167,8 @@ class WizardController extends Controller
     }
 
     /**
+     * Step 3. Confirm token -> send activation email
+     *
      * @Route("/confirm-token", name="self_service_confirm")
      * @Template()
      *
@@ -175,6 +190,9 @@ class WizardController extends Controller
     }
 
     /**
+     * Step 4. Email activation confirmation
+     * Supports redirecting towards SAML for non-authenticated users
+     *
      * @Route("/registration-code/", name="self_service_registration")
      * @Method("GET")
      *
@@ -206,6 +224,8 @@ class WizardController extends Controller
     }
 
     /**
+     * step 4. Registration confirmed, send email.
+     *
      * @Route("/registration-instruction", name="self_service_registration_instruction")
      * @Method("GET")
      * @Template()
@@ -237,6 +257,7 @@ class WizardController extends Controller
 
     /**
      * [!!!] Solely for Pilot
+     * Drop all tokens for the currently logged in user
      *
      * @Route("/clear-tokens", name="self_service_clear_tokens")
      *
@@ -257,6 +278,12 @@ class WizardController extends Controller
         return $this->redirect($this->generateUrl($targetRoute));
     }
 
+    /**
+     * Shortcut for redirecting towards the error-action
+     *
+     * @param string $message
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     private function error($message)
     {
         $this->get('session')->set('error_message', $message);
