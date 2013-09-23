@@ -160,9 +160,10 @@ class WizardController extends Controller
             $form->get('otp')->addError(new FormError('Invalid password, please try again'));
         }
 
+        $type = new YubiKey();
         return array(
             'user' => $user->getView(),
-            'tokenType' => (new YubiKey())->getType(),
+            'tokenType' => $type->getType(),
             'tokenExtended' => 'a Yubikey',
             'form' => $form->createView(),
         );
